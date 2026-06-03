@@ -1,6 +1,5 @@
 import React from "react";
 import { Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import Slider from "@react-native-community/slider";
 import { ChevronDown, Play, Pause, SkipBack, SkipForward } from "lucide-react-native";
 import { colors, radius } from "@/lib/theme";
 import { usePlayer } from "@/player/usePlayer";
