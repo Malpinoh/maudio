@@ -1,74 +1,144 @@
-# Complete Native MAUDIO App — Final Wiring & Build
 
-Yes — it's possible. The codebase already has the heavy pieces in place (Capacitor v8, Music Controls plugin, SQLite offline DB, Filesystem downloads + 200MB LRU cache, MediaSession fallback, mobile mini/fullscreen player, Spotify-like home header). What's missing is the final **native wiring, build config, and the manual Android Studio steps** — those can't run inside Lovable's sandbox, they must run on your machine.
+## Execution order
 
-## What I will do (inside Lovable)
+1. **Phase 1 — React Native app scaffold** under `maudio-native/` (this build round + likely 1–2 follow-up rounds for screen parity).
+2. **Track B — Web app fixes** (charts daily/weekly, Top Picks for all roles, online/offline icon) after Phase 1 lands.
 
-1. **Native bootstrap polish**
-  - Ensure `NativeBootstrap` initializes SQLite, Network listener, StatusBar, SplashScreen, and Music Controls in the correct order on app start.
-  - Hide splash only after first paint + auth check.
-2. **Capacitor config hardening** (`capacitor.config.ts`)
-  - Confirm `server.url` is unset (ships compiled bundle, not live preview).
-  - Add `App`, `Network`, `Filesystem`, `LocalNotifications`, `MusicControls` plugin configs.
-  - Add Android `backgroundColor`, `useLegacyBridge: false`.
-  - app id should be
-    ```typescript
-     appId: 'com.maudio.online',
-    ```
-3. **Android manifest needs (documented in MOBILE_APP_GUIDE.md)**
-  List the exact permissions to add after `npx cap add android`:
-  - `INTERNET`, `ACCESS_NETWORK_STATE`
-  - `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_MEDIA_PLAYBACK` (Android 14+)
-  - `POST_NOTIFICATIONS` (Android 13+)
-  - `WAKE_LOCK`, `MEDIA_CONTENT_CONTROL`
-  - `READ_MEDIA_AUDIO` (for offline file access on Android 13+)
-4. **Background playback reliability**
-  - Verify the `<audio>` element keeps playing when WebView is backgrounded (Music Controls foreground service handles this — confirm it stays alive across track changes).
-  - Wire `App.addListener('appStateChange')` to keep the notification synced when returning from background.
-5. **Offline-first guarantees**
-  - Confirm `useMusicPlayerState` falls back to cached → downloaded → stream in that priority and surfaces a clear "Offline" badge.
-  - Auto-cache: every successful play writes to the 200MB LRU cache.
-  - Offline Mix tab: ensure it lists tracks resolvable purely from SQLite + Filesystem with no network.
-6. **Performance pass**
-  - Lazy-load route bundles (most pages already code-split — verify Index, Library, Player).
-  - Add `loading="lazy"` to non-critical images in cards.
-  - Disable Web Audio EQ graph until user opens settings (saves CPU on low-end devices).
-7. **Final QA checklist** added to `MOBILE_APP_GUIDE.md`:
-  - Header only on Home ✓
-  - Mini player floats above bottom nav ✓
-  - Fullscreen immersive player ✓
-  - Lock screen + notification controls (play/pause/next/prev/seek) ✓
-  - Download → plays offline ✓
-  - Auto-cache → plays offline ✓
-  - Network banner appears when offline ✓
-  - Background playback persists when screen off ✓
+The existing `src/`, `android/`, `capacitor.config.ts`, and `supabase/` stay untouched in this round. Nothing in the live web app breaks.
 
-## What you must do (outside Lovable — required for a real native APK)
+---
 
-Lovable's sandbox cannot compile an Android APK or run an emulator. After I finish the code changes, you run these on your machine **once**:
+## Phase 1 deliverables (this round)
 
-```bash
-git pull
-npm install
-npx cap add android         # only first time
-npm run build
-npx cap sync android
-npx cap open android        # opens Android Studio
+### 1. Project scaffold — `maudio-native/`
+
+```
+maudio-native/
+  app.config.ts          # Expo config (appId com.maudio.online, name MAUDIO)
+  package.json
+  tsconfig.json
+  babel.config.js
+  metro.config.js
+  index.ts               # registerRootComponent(App)
+  App.tsx                # providers + navigation root
+  src/
+    lib/
+      supabase.ts        # Supabase client w/ AsyncStorage session
+      theme.ts           # purple #7c3aed tokens, light/dark
+      format.ts
+    contexts/
+      AuthContext.tsx    # mirrors web AuthContext shape
+    player/
+      service.ts         # react-native-track-player service registration
+      setup.ts           # capabilities, notification config
+      usePlayer.ts       # hook: play/pause/next/prev/seek, current track
+    hooks/
+      useNetwork.ts      # NetInfo + 2s top-right indicator state
+      useTracks.ts       # mirrors web useTracks (charts, featured, etc.)
+      useRecommendations.ts
+    navigation/
+      RootNavigator.tsx  # Stack: Auth | Main
+      MainTabs.tsx       # Bottom tabs: Home, Search, Library, Profile
+    screens/
+      HomeScreen.tsx
+      SearchScreen.tsx
+      LibraryScreen.tsx  # incl. Offline Mix
+      ProfileScreen.tsx
+      AuthScreen.tsx
+      ChartsScreen.tsx
+      TrackScreen.tsx
+      ArtistScreen.tsx
+      AlbumScreen.tsx
+      PlaylistScreen.tsx
+    components/
+      MiniPlayer.tsx
+      FullscreenPlayer.tsx
+      NetworkPill.tsx    # top-right wifi/wifi-off, auto-hides 2s
+      TrackRow.tsx
+      AlbumCard.tsx
+      SectionHeader.tsx
+  android/               # generated by `expo prebuild` (instructions in README)
 ```
 
-Then in Android Studio: **Build → Build APK** (or Run on a connected device/emulator).
+### 2. Native playback + notification (the actual fix)
 
-For every future Lovable change: `git pull && npm run build && npx cap sync android` — no need to re-add the platform.
+- **`react-native-track-player`** as the engine. It owns Android `MediaSession`, foreground service with `FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK`, and the persistent media notification on Android 13/14/15/16. No custom Java needed.
+- HLS via TrackPlayer's ExoPlayer backend — feeds the same `.m3u8` URLs the `audio-processor` edge function already produces.
+- Capabilities registered: Play, Pause, SkipToNext, SkipToPrevious, SeekTo, Stop. Compact: Play/Pause, Prev, Next.
+- iOS: same library handles `MPNowPlayingInfoCenter` + lock-screen controls automatically.
+- Background mode in `app.config.ts`: `android.permissions` includes `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_MEDIA_PLAYBACK`, `POST_NOTIFICATIONS`, `WAKE_LOCK`.
 
-## Technical notes
+### 3. Auth + Supabase
 
-- The `capacitor-music-controls-plugin` requires the Android platform to be **added locally** (it registers a Java service). It cannot be tested in the web preview — controls there will silently no-op via the `isAndroidNative()` guard in `src/lib/native/musicControls.ts`. That's expected.
-- SQLite via `@capacitor-community/sqlite` also only activates on device; web uses the localStorage fallback already in `src/lib/offline/storage.ts`.
-- iOS is **not** included — would need `npx cap add ios` + a Mac with Xcode + extra plugin variants. Say the word if you want me to scope iOS too.
+- `@supabase/supabase-js` + `@react-native-async-storage/async-storage` + `react-native-url-polyfill`.
+- Reuses existing project URL + anon key from `app.config.ts` `extra`. Same RLS rules apply.
+- Email/password sign-in/up screen. Unauthenticated browsing allowed for Home/Search/Charts/Artist/Album/Track (matches existing rule). Library and Profile gate on auth.
 
-## Out of scope
+### 4. Home screen parity
 
-- Publishing to Google Play (signing keys, store listing, screenshots) — separate task.
-- Push notifications (FCM setup) — not in current spec.
+- Featured Tracks, Featured Albums, Top Charts (weekly regional preview), **Your Top Picks** (personalized when signed in, trending fallback when signed out — same rule as Track B), Trending Artists, Browse by Genre, Featured Playlists.
+- Data fetched live from Supabase (no mocks).
 
-Approve to implement steps 1–7. After that the app is ready for you to run the local build commands above.
+### 5. Charts screen
+
+- Daily / Weekly toggle + Global / Regional toggle.
+- Reads from the new `daily_charts` / `weekly_charts` views built in Track B. (Until Track B ships, falls back to current `global_charts` / `regional_charts` so the app isn't blocked.)
+
+### 6. Offline downloads
+
+- `expo-file-system` for audio file storage; `expo-sqlite` for download metadata. Ports the 200MB LRU cache from `src/lib/offline/storage.ts`.
+- Library → Downloads tab + Offline Mix. When NetInfo reports offline, Library auto-opens Offline Mix.
+
+### 7. Online/offline indicator
+
+- `@react-native-community/netinfo`. `NetworkPill` is a 32×32 icon-only pill, absolute top-right with `SafeAreaView` inset, scale+fade animation in, auto-hides after **2s**. Wifi (emerald) on reconnect, WifiOff (destructive) on disconnect. No text.
+
+### 8. README replacement
+
+The root `README.md` is rewritten to describe the actual current architecture:
+
+- **What MAUDIO is** (Spotify-like music platform, purple #7c3aed brand).
+- **Repo layout**: `src/` = React + Vite web app; `maudio-native/` = React Native (Expo) Android/iOS app; `supabase/` = shared backend (DB migrations + edge functions); `android/` = legacy Capacitor build (kept until RN reaches full parity, then removed).
+- **Web app**: `npm i && npm run dev` (port 8080).
+- **Native app**: `cd maudio-native && npm i && npx expo prebuild && npx expo run:android` (or `run:ios`). Requires Android Studio / Xcode locally — cannot be built inside Lovable's sandbox.
+- **Backend**: Supabase project ref `qkpjlfcpncvvjyzfolag`. Migrations auto-apply via Lovable.
+- **Shared env**: `.env` already provides `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY`. RN app reads the same values via `app.config.ts` → `extra`.
+- **Feature matrix**: which features live in web vs native vs both (Admin/Upload/Dashboard = web only in Phase 1; playback/charts/library/offline = both).
+
+### 9. Phase 1 explicitly excluded (deferred)
+
+Admin Panel, Artist Dashboard, Upload, Payouts, EQ/Crossfade, Comments, Reports, Verification — these remain web-only until Phase 2. Admins continue using the web app.
+
+### 10. What you must run locally after this round
+
+Lovable can write all the RN code but cannot compile an APK. After the round:
+
+```bash
+cd maudio-native
+npm install
+npx expo prebuild --platform android
+npx expo run:android        # device or emulator
+# or open android/ in Android Studio and Build > Build APK
+```
+
+The same RN bundle also runs on iOS via `npx expo run:ios` on a Mac with Xcode.
+
+---
+
+## Track B (next round, after Phase 1 lands)
+
+Concise recap — full detail unchanged from the previous plan:
+
+- **B1 Charts**: new `daily_charts` + `weekly_charts` SQL views; extend `get_chart_data`; add Daily/Weekly toggle on `ChartsPage`; `TopChartsSection` on home reads same hook with same defaults, deep-links carry filters.
+- **B2 Top Picks for all roles**: remove role/auth gate in `RecommendedSection`; show personalized when signed in, trending fallback when signed out; fix ambiguous `track_id` in `recommend_tracks_for_user` (resolves the 42702 console error).
+- **B3 Online/offline icon**: replace `NetworkStatusBanner` with a top-right 32×32 icon pill, auto-hides after 2s, no text toasts.
+
+---
+
+## Risks / call-outs
+
+- React Native Phase 1 is large. This round delivers the scaffold + auth + native playback + Home + Charts + Library/Offline + NetworkPill. Some secondary screens (Album/Playlist/Artist detail polish) may need a follow-up round.
+- The legacy Capacitor Android project stays in place. Once you've built the RN app and confirmed it works on a device, we can delete `android/` and the `@capacitor/*` deps in a cleanup round.
+- Lovable's preview shows only the web app. The RN app must be run on a device or emulator on your machine — that's the only way to actually see the native notification working.
+
+Approve to proceed: I'll start by scaffolding `maudio-native/`, wiring Supabase + auth, registering react-native-track-player, and building Home + Charts + Library + NetworkPill, then rewrite the root README.
