@@ -284,7 +284,7 @@ export function PersonalizedRecommendations() {
 
   if (loading || artistsLoading) {
     return (
-      <Section title="Recommended for You" subtitle={user ? "Based on your listening history" : "Popular tracks"} seeAllLink="/recommendations">
+      <Section title="Your Top Picks" subtitle={user ? "Curated for you" : "Popular on MAUDIO"} seeAllLink="/recommendations">
         {Array(isMobile ? 5 : 5).fill(0).map((_, i) => (
           <LoadingCard key={i} isMobile={isMobile} />
         ))}
@@ -294,7 +294,7 @@ export function PersonalizedRecommendations() {
   
   if (tracks.length > 0) {
     return (
-      <Section title="Recommended for You" subtitle={user ? "Based on your listening history" : "Popular tracks"} seeAllLink="/recommendations">
+      <Section title="Your Top Picks" subtitle={user ? "Curated for you" : "Popular on MAUDIO"} seeAllLink="/recommendations">
         {tracks.slice(0, isMobile ? 6 : 6).map(track => (
           isMobile ? (
             <TrackCard key={track.id} track={formatTrackForCard(track)} variant="list" />
@@ -311,7 +311,7 @@ export function PersonalizedRecommendations() {
   const recommendedArtists = artists.sort((a, b) => b.followers - a.followers).slice(0, 5);
   
   return (
-    <Section title="Recommended for You" subtitle="Popular artists" seeAllLink="/recommendations">
+    <Section title="Your Top Picks" subtitle="Popular artists" seeAllLink="/recommendations">
       {recommendedArtists.map(artist => (
         isMobile ? (
           <ArtistListItem key={artist.id} {...artist} />

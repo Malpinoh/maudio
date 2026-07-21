@@ -1398,6 +1398,20 @@ export type Database = {
           track_id: string
         }[]
       }
+      get_charts_by_period: {
+        Args: {
+          p_limit?: number
+          p_period?: string
+          p_region?: string
+          p_scope?: string
+        }
+        Returns: {
+          last_played_at: string
+          play_count: number
+          region_country: string
+          track_id: string
+        }[]
+      }
       get_cover_art_url: { Args: { cover_path: string }; Returns: string }
       get_current_user_role: { Args: never; Returns: string }
       get_genre_recommendations: {

@@ -63,6 +63,7 @@ export interface TracksFilter {
   };
   region?: string;
   chartType?: 'global' | 'regional' | 'trending';
+  chartPeriod?: 'daily' | 'weekly' | 'monthly';
   trackType?: 'single' | 'ep' | 'album';
   albumName?: string;
 }
