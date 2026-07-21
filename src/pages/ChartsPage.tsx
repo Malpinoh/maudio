@@ -69,6 +69,7 @@ const TrackRanking = ({ rank, track }: { rank: number; track: any }) => {
 
 const ChartsPage = () => {
   const [chartType, setChartType] = useState<'global' | 'regional'>('regional');
+  const [chartPeriod, setChartPeriod] = useState<'daily' | 'weekly'>('weekly');
   const [selectedRegion, setSelectedRegion] = useState<string>('');
   const { regions, loading: loadingRegions } = useAvailableRegions();
   const { location, loading: locationLoading } = useUserLocation();
@@ -81,8 +82,8 @@ const ChartsPage = () => {
   }, [location, selectedRegion]);
 
   const filter: TracksFilter = chartType === 'global'
-    ? { chartType: 'global', limit: 100 }
-    : { chartType: 'regional', region: selectedRegion, limit: 100 };
+    ? { chartType: 'global', chartPeriod, limit: 100 }
+    : { chartType: 'regional', chartPeriod, region: selectedRegion, limit: 100 };
 
   const { tracks, loading } = useTracks(filter);
 
@@ -137,6 +138,21 @@ const ChartsPage = () => {
               <MapPin className="h-3.5 w-3.5" />
               Regional
             </Button>
+            <div className="mx-1 h-5 w-px bg-border" />
+            <Button
+              variant={chartPeriod === 'daily' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setChartPeriod('daily')}
+            >
+              Daily
+            </Button>
+            <Button
+              variant={chartPeriod === 'weekly' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setChartPeriod('weekly')}
+            >
+              Weekly
+            </Button>
           </div>
 
           {chartType === 'regional' && (
@@ -162,7 +178,7 @@ const ChartsPage = () => {
         {/* Chart badge */}
         <div className="flex items-center gap-2 mb-4">
           <Badge variant="outline" className="text-sm">
-            {chartType === 'global' ? 'Global Top 100' : `${formatRegionName(selectedRegion)} Top 100`}
+            {chartType === 'global' ? 'Global' : formatRegionName(selectedRegion)} · {chartPeriod === 'daily' ? 'Daily' : 'Weekly'} Top 100
           </Badge>
           <Badge variant="secondary" className="text-xs">
             <TrendingUp className="h-3 w-3 mr-1" />
@@ -204,7 +220,7 @@ const ChartsPage = () => {
         <div className="mt-8 bg-muted/30 p-5 rounded-xl border border-border">
           <h2 className="text-lg font-bold mb-2">About MAUDIO Charts</h2>
           <p className="text-muted-foreground text-sm">
-            Charts are updated hourly based on streams from the past 7 days. Global charts track worldwide streams, while regional charts reflect local listening trends.
+            Rankings are computed live from real streams. Daily charts cover the last 24 hours; weekly charts cover the last 7 days. The same data powers the home page charts section.
           </p>
         </div>
       </div>
