@@ -40,7 +40,8 @@ export function useTracks(filter: TracksFilter = { published: true, limit: 10 })
     filter.orderBy?.ascending,
     filter.tags,
     filter.chartType,
-    filter.region
+    filter.region,
+    filter.chartPeriod
   ]);
 
   return { tracks, loading, error };
