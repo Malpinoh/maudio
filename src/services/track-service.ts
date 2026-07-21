@@ -107,17 +107,25 @@ async function fetchFromCharts(filter: TracksFilter) {
     let chartData: any[] = [];
     let chartError: any = null;
 
-    if (filter.chartType === 'global') {
-      // Use global charts
+    if (filter.chartPeriod) {
+      // Period-based charts (daily/weekly/monthly) derived from stream_logs.
+      const { data, error } = await supabase.rpc('get_charts_by_period', {
+        p_scope: filter.chartType === 'regional' ? 'regional' : 'global',
+        p_region: filter.chartType === 'regional' ? (filter.region || null) : null,
+        p_period: filter.chartPeriod,
+        p_limit: filter.limit || 100,
+      });
+      chartData = data as any[];
+      chartError = error;
+    } else if (filter.chartType === 'global') {
       const { data, error } = await supabase.rpc('get_chart_data', {
         view_name: 'global_charts'
       });
-      chartData = data;
+      chartData = data as any[];
       chartError = error;
     } else {
-      // Use African regional charts only
       const { data, error } = await supabase.rpc('get_african_regional_charts');
-      chartData = data;
+      chartData = data as any[];
       chartError = error;
     }
     
