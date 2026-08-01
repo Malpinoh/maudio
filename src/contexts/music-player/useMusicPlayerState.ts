@@ -350,13 +350,18 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
     };
 
     await attemptPlay(1);
-  }, [handleAudioError, logStream, updateMediaSession]);
+  }, [handleAudioError, logStream, updateMediaSession, useNative, toNativeTrack]);
 
   const retryPlayback = useCallback(() => {
     if (state.currentTrack) playTrack(state.currentTrack);
   }, [state.currentTrack, playTrack]);
 
   const play = useCallback(async () => {
+    if (useNative) {
+      await nativePlayer.play();
+      setState(prev => ({ ...prev, isPlaying: true, playbackError: null }));
+      return;
+    }
     if (audioRef.current) {
       try {
         await audioRef.current.play();
@@ -366,41 +371,62 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
         handleAudioError(error, 'play');
       }
     }
-  }, [handleAudioError]);
+  }, [handleAudioError, useNative]);
 
   const pause = useCallback(() => {
+    if (useNative) {
+      nativePlayer.pause();
+      setState(prev => ({ ...prev, isPlaying: false }));
+      return;
+    }
     if (audioRef.current) {
       audioRef.current.pause();
       setState(prev => ({ ...prev, isPlaying: false }));
     }
-  }, []);
+  }, [useNative]);
 
   const togglePlay = useCallback(() => {
     if (state.isPlaying) { pause(); } else { play(); }
   }, [state.isPlaying, play, pause]);
 
   const setVolume = useCallback((volume: number) => {
+    if (useNative) {
+      nativePlayer.setVolume(volume / 100);
+      setState(prev => ({ ...prev, volume, isMuted: volume === 0 }));
+      return;
+    }
     if (audioRef.current) {
       const normalizedVolume = volume / 100;
       audioRef.current.volume = normalizedVolume;
       setState(prev => ({ ...prev, volume, isMuted: volume === 0 }));
     }
-  }, []);
+  }, [useNative]);
 
   const toggleMute = useCallback(() => {
+    if (useNative) {
+      const newMuted = !state.isMuted;
+      nativePlayer.setVolume(newMuted ? 0 : state.volume / 100);
+      setState(prev => ({ ...prev, isMuted: newMuted }));
+      return;
+    }
     if (audioRef.current) {
       const newMuted = !state.isMuted;
       audioRef.current.volume = newMuted ? 0 : state.volume / 100;
       setState(prev => ({ ...prev, isMuted: newMuted }));
     }
-  }, [state.isMuted, state.volume]);
+  }, [state.isMuted, state.volume, useNative]);
 
   const seekTo = useCallback((time: number) => {
+    if (useNative) {
+      nativePlayer.seekTo(Math.round(time * 1000));
+      setState(prev => ({ ...prev, currentTime: time }));
+      return;
+    }
     if (audioRef.current) {
       audioRef.current.currentTime = time;
       setState(prev => ({ ...prev, currentTime: time }));
     }
-  }, []);
+  }, [useNative]);
 
   const setQueue = useCallback((tracks: Track[], source?: PlaybackSource | null) => {
     setState(prev => ({
