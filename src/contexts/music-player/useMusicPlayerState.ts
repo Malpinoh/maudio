@@ -7,6 +7,15 @@ import { useStreamLogger } from '@/hooks/use-stream-logger';
 import { toast } from 'sonner';
 import { getOfflineUri, cacheTrackInBackground } from '@/lib/offline/storage';
 import { isOnline as isNetworkOnline } from '@/lib/offline/network';
+import { getOfflineFileUri } from '@/lib/offline/storage';
+import { nativePlayer, isNativePlayerAvailable, NativeTrack } from '@/lib/native/nativePlayer';
+
+const SUPABASE_PUBLIC = 'https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public';
+
+const resolveCoverUrl = (coverArtPath?: string | null): string => {
+  if (!coverArtPath) return '';
+  return coverArtPath.startsWith('http') ? coverArtPath : `${SUPABASE_PUBLIC}/cover_art/${coverArtPath}`;
+};
 
 const trackListeningHistory = async (userId: string, trackId: string, listenTime: number) => {
   try {
@@ -131,6 +140,29 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
   const lastAudioUrlRef = useRef<string>('');
   const lastPositionSaveRef = useRef<number>(0);
 
+  // ---- Native Media3 playback (Android) ----
+  // When the native player is present, audio never touches the WebView: the
+  // foreground MediaLibraryService owns it, which is what keeps lock-screen
+  // playback, the notification, Bluetooth and Android Auto alive on Android 13+.
+  const useNative = isNativePlayerAvailable();
+  const stateRef = useRef<MusicPlayerState>(state);
+  stateRef.current = state;
+
+  const toNativeTrack = useCallback(async (track: Track): Promise<NativeTrack | null> => {
+    if (!track?.audio_file_path) return null;
+    const localUri = await getOfflineFileUri(track.id).catch(() => null);
+    const url = localUri || getValidAudioUrl(track.audio_file_path);
+    return {
+      id: track.id,
+      url,
+      title: track.title,
+      artist: track.artist,
+      album: track.album_name || track.genre || '',
+      artworkUrl: resolveCoverUrl(track.cover_art_path),
+      durationMs: track.duration ? Math.round(track.duration * 1000) : 0,
+    };
+  }, []);
+
   const handleAudioError = useCallback((error: any, context: string = '', audioUrl?: string) => {
     if (error?.name === 'AbortError' || (error instanceof DOMException && error.name === 'AbortError')) return;
     if (error?.message?.includes('interrupted') || error?.message?.includes('aborted')) return;
@@ -172,6 +204,50 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
       currentTrack: track,
       queue: prev.queue.some(t => t.id === track.id) ? prev.queue : [track, ...prev.queue]
     }));
+
+    // ---- Native Media3 path (Android) ----
+    if (useNative) {
+      try {
+        await nativePlayer.requestNotificationPermission();
+
+        const prevQueue = stateRef.current.queue;
+        const queue = prevQueue.some(t => t.id === track.id) ? prevQueue : [track, ...prevQueue];
+        const resolved = (await Promise.all(queue.map(toNativeTrack))).filter(Boolean) as NativeTrack[];
+        const startIndex = Math.max(0, resolved.findIndex(t => t.id === track.id));
+
+        if (resolved.length === 0) throw new Error('No playable audio source for this track.');
+
+        const savedPos = loadPosition(track.id);
+        const result = await nativePlayer.load(
+          resolved,
+          startIndex,
+          true,
+          savedPos ? Math.round(savedPos * 1000) : 0,
+        );
+        if (playbackLockRef.current !== lockId) return;
+        if (!result) throw new Error('Native player is not ready yet. Try again.');
+
+        setState(prev => ({ ...prev, isPlaying: true, isLoading: false, playbackError: null }));
+
+        if (!streamLoggedRef.current.has(track.id)) {
+          streamLoggedRef.current.add(track.id);
+          logStream(track.id);
+        }
+        cacheTrackInBackground({
+          id: track.id,
+          title: track.title,
+          artist: track.artist,
+          album_name: track.album_name,
+          cover_art_path: track.cover_art_path,
+          audio_file_path: track.audio_file_path,
+          duration: track.duration,
+        }).catch(() => {});
+      } catch (error: any) {
+        if (playbackLockRef.current !== lockId) return;
+        handleAudioError(error, 'playTrack(native)');
+      }
+      return;
+    }
 
     // Detect slow connection for network adaptation hint
     const conn = (navigator as any).connection;
@@ -274,13 +350,18 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
     };
 
     await attemptPlay(1);
-  }, [handleAudioError, logStream, updateMediaSession]);
+  }, [handleAudioError, logStream, updateMediaSession, useNative, toNativeTrack]);
 
   const retryPlayback = useCallback(() => {
     if (state.currentTrack) playTrack(state.currentTrack);
   }, [state.currentTrack, playTrack]);
 
   const play = useCallback(async () => {
+    if (useNative) {
+      await nativePlayer.play();
+      setState(prev => ({ ...prev, isPlaying: true, playbackError: null }));
+      return;
+    }
     if (audioRef.current) {
       try {
         await audioRef.current.play();
@@ -290,41 +371,62 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
         handleAudioError(error, 'play');
       }
     }
-  }, [handleAudioError]);
+  }, [handleAudioError, useNative]);
 
   const pause = useCallback(() => {
+    if (useNative) {
+      nativePlayer.pause();
+      setState(prev => ({ ...prev, isPlaying: false }));
+      return;
+    }
     if (audioRef.current) {
       audioRef.current.pause();
       setState(prev => ({ ...prev, isPlaying: false }));
     }
-  }, []);
+  }, [useNative]);
 
   const togglePlay = useCallback(() => {
     if (state.isPlaying) { pause(); } else { play(); }
   }, [state.isPlaying, play, pause]);
 
   const setVolume = useCallback((volume: number) => {
+    if (useNative) {
+      nativePlayer.setVolume(volume / 100);
+      setState(prev => ({ ...prev, volume, isMuted: volume === 0 }));
+      return;
+    }
     if (audioRef.current) {
       const normalizedVolume = volume / 100;
       audioRef.current.volume = normalizedVolume;
       setState(prev => ({ ...prev, volume, isMuted: volume === 0 }));
     }
-  }, []);
+  }, [useNative]);
 
   const toggleMute = useCallback(() => {
+    if (useNative) {
+      const newMuted = !state.isMuted;
+      nativePlayer.setVolume(newMuted ? 0 : state.volume / 100);
+      setState(prev => ({ ...prev, isMuted: newMuted }));
+      return;
+    }
     if (audioRef.current) {
       const newMuted = !state.isMuted;
       audioRef.current.volume = newMuted ? 0 : state.volume / 100;
       setState(prev => ({ ...prev, isMuted: newMuted }));
     }
-  }, [state.isMuted, state.volume]);
+  }, [state.isMuted, state.volume, useNative]);
 
   const seekTo = useCallback((time: number) => {
+    if (useNative) {
+      nativePlayer.seekTo(Math.round(time * 1000));
+      setState(prev => ({ ...prev, currentTime: time }));
+      return;
+    }
     if (audioRef.current) {
       audioRef.current.currentTime = time;
       setState(prev => ({ ...prev, currentTime: time }));
     }
-  }, []);
+  }, [useNative]);
 
   const setQueue = useCallback((tracks: Track[], source?: PlaybackSource | null) => {
     setState(prev => ({
@@ -364,6 +466,7 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
   const playNext = useCallback(() => {
     // Clear saved position for current track on skip
     if (state.currentTrack) clearPosition(state.currentTrack.id);
+    if (useNative) { nativePlayer.next(); return; }
     let nextTrack: Track | null = null;
     const currentIndex = state.queue.findIndex(track => track.id === state.currentTrack?.id);
     if (state.repeatMode === 'one' && state.currentTrack) { playTrack(state.currentTrack); return; }
@@ -376,10 +479,11 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
       nextTrack = state.queue[0];
     }
     if (nextTrack) { playTrack(nextTrack); }
-  }, [state.queue, state.currentTrack, state.isShuffle, state.repeatMode, playTrack]);
+  }, [state.queue, state.currentTrack, state.isShuffle, state.repeatMode, playTrack, useNative]);
 
   const playPrevious = useCallback(() => {
     if (state.currentTrack) clearPosition(state.currentTrack.id);
+    if (useNative) { nativePlayer.previous(); return; }
     const currentIndex = state.queue.findIndex(track => track.id === state.currentTrack?.id);
     if (state.isShuffle) {
       const availableTracks = state.queue.filter(track => track.id !== state.currentTrack?.id);
@@ -389,7 +493,7 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
     } else if (state.repeatMode === 'all' && state.queue.length > 0) {
       playTrack(state.queue[state.queue.length - 1]);
     }
-  }, [state.queue, state.currentTrack, state.isShuffle, state.repeatMode, playTrack]);
+  }, [state.queue, state.currentTrack, state.isShuffle, state.repeatMode, playTrack, useNative]);
 
   const likeTrack = useCallback(async (trackId: string): Promise<boolean> => {
     try {
@@ -449,13 +553,18 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
   const toggleRepeat = useCallback(() => {
     setState(prev => {
       const nextMode = prev.repeatMode === 'off' ? 'all' : prev.repeatMode === 'all' ? 'one' : 'off';
+      if (useNative) nativePlayer.setRepeat(nextMode);
       return { ...prev, repeatMode: nextMode };
     });
-  }, []);
+  }, [useNative]);
 
   const toggleShuffle = useCallback(() => {
-    setState(prev => ({ ...prev, isShuffle: !prev.isShuffle }));
-  }, []);
+    setState(prev => {
+      const next = !prev.isShuffle;
+      if (useNative) nativePlayer.setShuffle(next);
+      return { ...prev, isShuffle: next };
+    });
+  }, [useNative]);
 
   const shareTrack = useCallback(async (trackId: string) => {
     const t = state.currentTrack;
@@ -489,6 +598,7 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
   }, []);
 
   useEffect(() => {
+    if (useNative) return;
     if (audioRef.current) {
       const audio = audioRef.current;
 
@@ -545,9 +655,12 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
         audio.removeEventListener('playing', handlePlaying);
       };
     }
-  }, [playNext, handleAudioError, state.currentTrack]);
+  }, [playNext, handleAudioError, state.currentTrack, useNative]);
 
   useEffect(() => {
+    // The native MediaSession lives in MaudioPlayerService on Android, so the
+    // WebView must not register competing handlers.
+    if (useNative) return;
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', () => play());
       navigator.mediaSession.setActionHandler('pause', () => pause());
@@ -562,17 +675,19 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
         navigator.mediaSession.setActionHandler('stop', () => pause());
       } catch {}
     }
-  }, [play, pause, seekTo, state.currentTime, state.duration, playNext, playPrevious]);
+  }, [play, pause, seekTo, state.currentTime, state.duration, playNext, playPrevious, useNative]);
 
   // Keep MediaSession playback state + position in sync (lock-screen scrubber)
   useEffect(() => {
+    if (useNative) return;
     if (!('mediaSession' in navigator)) return;
     try {
       navigator.mediaSession.playbackState = state.isPlaying ? 'playing' : 'paused';
     } catch {}
-  }, [state.isPlaying]);
+  }, [state.isPlaying, useNative]);
 
   useEffect(() => {
+    if (useNative) return;
     if (!('mediaSession' in navigator) || !('setPositionState' in navigator.mediaSession)) return;
     if (!state.duration || !isFinite(state.duration) || state.duration <= 0) return;
     try {
@@ -582,7 +697,93 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
         playbackRate: audioRef.current?.playbackRate || 1,
       });
     } catch {}
-  }, [state.currentTime, state.duration]);
+  }, [state.currentTime, state.duration, useNative]);
+
+  // ---- Mirror native Media3 state back into React ----
+  // Notification / lock-screen / Bluetooth / Android Auto all drive the native
+  // player directly, so these events are the single source of truth on Android.
+  useEffect(() => {
+    if (!useNative) return;
+
+    const offPosition = nativePlayer.on('positionChanged', (e: any) => {
+      const currentTime = (e?.positionMs ?? 0) / 1000;
+      const duration = (e?.durationMs ?? 0) / 1000;
+      setState(prev => ({
+        ...prev,
+        currentTime,
+        duration: duration > 0 ? duration : prev.duration,
+      }));
+      const now = Date.now();
+      const track = stateRef.current.currentTrack;
+      if (track && now - lastPositionSaveRef.current >= POSITION_SAVE_INTERVAL) {
+        lastPositionSaveRef.current = now;
+        savePosition(track.id, currentTime);
+      }
+    });
+
+    const offState = nativePlayer.on('state', (e: any) => {
+      if (!e?.connected) return;
+      setState(prev => ({
+        ...prev,
+        isPlaying: !!e.isPlaying,
+        isLoading: !!e.isBuffering,
+        duration: e.durationMs > 0 ? e.durationMs / 1000 : prev.duration,
+      }));
+    });
+
+    const offTrack = nativePlayer.on('trackChanged', (e: any) => {
+      const id = e?.trackId;
+      if (!id) return;
+      const prevTrack = stateRef.current.currentTrack;
+      if (prevTrack && prevTrack.id !== id) {
+        clearPosition(prevTrack.id);
+        streamLoggedRef.current.delete(prevTrack.id);
+      }
+      const next = stateRef.current.queue.find(t => t.id === id);
+      if (next) {
+        setState(prev => ({ ...prev, currentTrack: next, currentTime: 0, playbackError: null }));
+        if (!streamLoggedRef.current.has(id)) {
+          streamLoggedRef.current.add(id);
+          logStream(id);
+        }
+        supabase.auth.getUser().then(({ data: { user } }) => {
+          if (user && prevTrack) {
+            trackListeningHistory(user.id, prevTrack.id, Math.floor(prevTrack.duration || 30));
+          }
+        });
+      }
+    });
+
+    const offEnded = nativePlayer.on('queueEnded', () => {
+      setState(prev => ({ ...prev, isPlaying: false }));
+    });
+
+    const offError = nativePlayer.on('error', (e: any) => {
+      const message = /source|4001|2\d{3}/i.test(String(e?.name || ''))
+        ? 'This track could not be played. It may be unavailable offline.'
+        : e?.message || 'Playback failed.';
+      setState(prev => ({
+        ...prev,
+        isPlaying: false,
+        isLoading: false,
+        playbackError: { type: 'source', message, canRetry: true },
+      }));
+      toast.error(message, { duration: 2500 });
+    });
+
+    nativePlayer.getState().then((s) => {
+      if (s?.connected) {
+        setState(prev => ({
+          ...prev,
+          isPlaying: !!s.isPlaying,
+          currentTime: (s.positionMs ?? 0) / 1000,
+          duration: (s.durationMs ?? 0) / 1000,
+        }));
+      }
+    });
+
+    return () => { offPosition(); offState(); offTrack(); offEnded(); offError(); };
+  }, [useNative, logStream]);
 
   return {
     currentTrack: state.currentTrack,
