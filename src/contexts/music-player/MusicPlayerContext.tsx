@@ -241,6 +241,35 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     }
   }, [musicPlayerState.currentTrack?.id]);
 
+  // Publish a browse tree so Android Auto / Bluetooth head units can start
+  // playback on their own, without the phone screen ever being unlocked.
+  useEffect(() => {
+    if (!isNativePlayerAvailable()) return;
+    const queue = musicPlayerState.queue || [];
+    if (queue.length === 0) return;
+    nativePlayer.syncLibrary([
+      {
+        id: 'queue',
+        title: 'Now Playing Queue',
+        tracks: queue.map((t) => ({
+          id: t.id,
+          url: t.audio_file_path?.startsWith('http')
+            ? t.audio_file_path
+            : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/audio_files/${t.audio_file_path}`,
+          title: t.title,
+          artist: t.artist,
+          album: t.album_name || '',
+          artworkUrl: t.cover_art_path
+            ? (t.cover_art_path.startsWith('http')
+                ? t.cover_art_path
+                : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/cover_art/${t.cover_art_path}`)
+            : '',
+          durationMs: t.duration ? Math.round(t.duration * 1000) : 0,
+        })),
+      },
+    ]);
+  }, [musicPlayerState.queue]);
+
   const contextValue: MusicPlayerContextType = {
     ...musicPlayerState,
     audioEngine,
