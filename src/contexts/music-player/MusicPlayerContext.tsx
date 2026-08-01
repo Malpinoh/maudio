@@ -4,12 +4,7 @@ import { useMusicPlayerState } from './useMusicPlayerState';
 import { useAudioEngine } from '@/hooks/use-audio-engine';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import {
-  showMediaControls,
-  updatePlaybackState,
-  attachControlsListener,
-  destroyMediaControls,
-} from '@/lib/native/musicControls';
+import { nativePlayer, isNativePlayerAvailable } from '@/lib/native/nativePlayer';
 
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined);
 
@@ -236,73 +231,15 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   }, [musicPlayerState.currentTrack?.id, playbackRate]);
 
   // ---- Native lock-screen / notification media controls (Android) ----
-  const lastShownTrackIdRef = useRef<string | null>(null);
+  // Media3's MediaLibraryService owns the notification, lock-screen controls,
+  // Bluetooth transport buttons and Android Auto, so there is nothing to mirror
+  // from the WebView here — we only tear the session down when playback clears.
   useEffect(() => {
-    const t = musicPlayerState.currentTrack;
-    if (!t) {
-      destroyMediaControls().catch(() => {});
-      lastShownTrackIdRef.current = null;
-      return;
+    if (!isNativePlayerAvailable()) return;
+    if (!musicPlayerState.currentTrack) {
+      nativePlayer.clear();
     }
-    const cover = t.cover_art_path
-      ? (t.cover_art_path.startsWith('http')
-          ? t.cover_art_path
-          : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/cover_art/${t.cover_art_path}`)
-      : '';
-    showMediaControls({
-      track: t.title,
-      artist: t.artist,
-      album: t.album_name || '',
-      cover,
-      duration: musicPlayerState.duration || t.duration || 0,
-      elapsed: musicPlayerState.currentTime || 0,
-      isPlaying: musicPlayerState.isPlaying,
-    }).catch(() => {});
-    lastShownTrackIdRef.current = t.id;
   }, [musicPlayerState.currentTrack?.id]);
-
-  // Keep play/pause + elapsed in sync with the notification.
-  useEffect(() => {
-    if (!musicPlayerState.currentTrack) return;
-    updatePlaybackState(musicPlayerState.isPlaying, musicPlayerState.currentTime).catch(() => {});
-  }, [musicPlayerState.isPlaying]);
-
-  // Forward notification button presses → player actions.
-  useEffect(() => {
-    let detach = () => {};
-    attachControlsListener((evt) => {
-      switch (evt.message) {
-        case 'music-controls-play':
-        case 'music-controls-media-button-play':
-          if (!musicPlayerState.isPlaying) musicPlayerState.togglePlay();
-          break;
-        case 'music-controls-pause':
-        case 'music-controls-media-button-pause':
-        case 'music-controls-headset-unplugged':
-          if (musicPlayerState.isPlaying) musicPlayerState.togglePlay();
-          break;
-        case 'music-controls-toggle-play-pause':
-          musicPlayerState.togglePlay();
-          break;
-        case 'music-controls-next':
-        case 'music-controls-media-button-next':
-          musicPlayerState.playNext();
-          break;
-        case 'music-controls-previous':
-        case 'music-controls-media-button-previous':
-          musicPlayerState.playPrevious();
-          break;
-        case 'music-controls-seek-to':
-          if (typeof evt.position === 'number') musicPlayerState.seekTo(evt.position);
-          break;
-        case 'music-controls-destroy':
-          if (musicPlayerState.isPlaying) musicPlayerState.togglePlay();
-          destroyMediaControls().catch(() => {});
-          break;
-      }
-    }).then((d) => { detach = d; });
-    return () => { detach(); };
-  }, [musicPlayerState.togglePlay, musicPlayerState.playNext, musicPlayerState.playPrevious, musicPlayerState.seekTo, musicPlayerState.isPlaying]);
 
   const contextValue: MusicPlayerContextType = {
     ...musicPlayerState,
