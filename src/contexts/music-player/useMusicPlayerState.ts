@@ -7,6 +7,15 @@ import { useStreamLogger } from '@/hooks/use-stream-logger';
 import { toast } from 'sonner';
 import { getOfflineUri, cacheTrackInBackground } from '@/lib/offline/storage';
 import { isOnline as isNetworkOnline } from '@/lib/offline/network';
+import { getOfflineFileUri } from '@/lib/offline/storage';
+import { nativePlayer, isNativePlayerAvailable, NativeTrack } from '@/lib/native/nativePlayer';
+
+const SUPABASE_PUBLIC = 'https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public';
+
+const resolveCoverUrl = (coverArtPath?: string | null): string => {
+  if (!coverArtPath) return '';
+  return coverArtPath.startsWith('http') ? coverArtPath : `${SUPABASE_PUBLIC}/cover_art/${coverArtPath}`;
+};
 
 const trackListeningHistory = async (userId: string, trackId: string, listenTime: number) => {
   try {
