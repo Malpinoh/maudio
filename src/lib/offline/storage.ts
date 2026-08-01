@@ -266,6 +266,38 @@ export async function getOfflineUri(trackId: string): Promise<string | null> {
   return null;
 }
 
+async function getRawUri(kind: "download" | "cache", filePath: string): Promise<string | null> {
+  if (!isNative()) return null;
+  const { directory } = dirFor(kind);
+  try {
+    const r = await Filesystem.getUri({ path: filePath, directory });
+    return r.uri;
+  } catch { return null; }
+}
+
+/**
+ * Raw `file://` URI for a locally stored track.
+ *
+ * `getOfflineUri` returns a `convertFileSrc` URL, which only the WebView can
+ * read. Native ExoPlayer needs the real filesystem URI, so the Media3 player
+ * resolves offline tracks through this instead.
+ */
+export async function getOfflineFileUri(trackId: string): Promise<string | null> {
+  const dRows = await listRows("downloads");
+  const d = dRows.find(r => r.track_id === trackId);
+  if (d && isNative()) {
+    const uri = await getRawUri("download", d.file_path);
+    if (uri) { touchRow("downloads", trackId).catch(() => {}); return uri; }
+  }
+  const cRows = await listRows("cache_entries");
+  const c = cRows.find(r => r.track_id === trackId);
+  if (c && isNative()) {
+    const uri = await getRawUri("cache", c.file_path);
+    if (uri) { touchRow("cache_entries", trackId).catch(() => {}); return uri; }
+  }
+  return null;
+}
+
 export async function downloadTrack(track: TrackForOffline, onProgress?: (p: number) => void): Promise<void> {
   if (!isNative()) {
     // Web fallback: just record the intent so UI shows "downloaded"
