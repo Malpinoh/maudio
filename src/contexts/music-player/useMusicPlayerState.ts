@@ -466,6 +466,7 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
   const playNext = useCallback(() => {
     // Clear saved position for current track on skip
     if (state.currentTrack) clearPosition(state.currentTrack.id);
+    if (useNative) { nativePlayer.next(); return; }
     let nextTrack: Track | null = null;
     const currentIndex = state.queue.findIndex(track => track.id === state.currentTrack?.id);
     if (state.repeatMode === 'one' && state.currentTrack) { playTrack(state.currentTrack); return; }
@@ -478,10 +479,11 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
       nextTrack = state.queue[0];
     }
     if (nextTrack) { playTrack(nextTrack); }
-  }, [state.queue, state.currentTrack, state.isShuffle, state.repeatMode, playTrack]);
+  }, [state.queue, state.currentTrack, state.isShuffle, state.repeatMode, playTrack, useNative]);
 
   const playPrevious = useCallback(() => {
     if (state.currentTrack) clearPosition(state.currentTrack.id);
+    if (useNative) { nativePlayer.previous(); return; }
     const currentIndex = state.queue.findIndex(track => track.id === state.currentTrack?.id);
     if (state.isShuffle) {
       const availableTracks = state.queue.filter(track => track.id !== state.currentTrack?.id);
@@ -491,7 +493,7 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
     } else if (state.repeatMode === 'all' && state.queue.length > 0) {
       playTrack(state.queue[state.queue.length - 1]);
     }
-  }, [state.queue, state.currentTrack, state.isShuffle, state.repeatMode, playTrack]);
+  }, [state.queue, state.currentTrack, state.isShuffle, state.repeatMode, playTrack, useNative]);
 
   const likeTrack = useCallback(async (trackId: string): Promise<boolean> => {
     try {
@@ -551,13 +553,18 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
   const toggleRepeat = useCallback(() => {
     setState(prev => {
       const nextMode = prev.repeatMode === 'off' ? 'all' : prev.repeatMode === 'all' ? 'one' : 'off';
+      if (useNative) nativePlayer.setRepeat(nextMode);
       return { ...prev, repeatMode: nextMode };
     });
-  }, []);
+  }, [useNative]);
 
   const toggleShuffle = useCallback(() => {
-    setState(prev => ({ ...prev, isShuffle: !prev.isShuffle }));
-  }, []);
+    setState(prev => {
+      const next = !prev.isShuffle;
+      if (useNative) nativePlayer.setShuffle(next);
+      return { ...prev, isShuffle: next };
+    });
+  }, [useNative]);
 
   const shareTrack = useCallback(async (trackId: string) => {
     const t = state.currentTrack;
