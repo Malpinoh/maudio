@@ -598,6 +598,7 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
   }, []);
 
   useEffect(() => {
+    if (useNative) return;
     if (audioRef.current) {
       const audio = audioRef.current;
 
@@ -654,9 +655,12 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
         audio.removeEventListener('playing', handlePlaying);
       };
     }
-  }, [playNext, handleAudioError, state.currentTrack]);
+  }, [playNext, handleAudioError, state.currentTrack, useNative]);
 
   useEffect(() => {
+    // The native MediaSession lives in MaudioPlayerService on Android, so the
+    // WebView must not register competing handlers.
+    if (useNative) return;
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', () => play());
       navigator.mediaSession.setActionHandler('pause', () => pause());
@@ -671,17 +675,19 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
         navigator.mediaSession.setActionHandler('stop', () => pause());
       } catch {}
     }
-  }, [play, pause, seekTo, state.currentTime, state.duration, playNext, playPrevious]);
+  }, [play, pause, seekTo, state.currentTime, state.duration, playNext, playPrevious, useNative]);
 
   // Keep MediaSession playback state + position in sync (lock-screen scrubber)
   useEffect(() => {
+    if (useNative) return;
     if (!('mediaSession' in navigator)) return;
     try {
       navigator.mediaSession.playbackState = state.isPlaying ? 'playing' : 'paused';
     } catch {}
-  }, [state.isPlaying]);
+  }, [state.isPlaying, useNative]);
 
   useEffect(() => {
+    if (useNative) return;
     if (!('mediaSession' in navigator) || !('setPositionState' in navigator.mediaSession)) return;
     if (!state.duration || !isFinite(state.duration) || state.duration <= 0) return;
     try {
@@ -691,7 +697,93 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
         playbackRate: audioRef.current?.playbackRate || 1,
       });
     } catch {}
-  }, [state.currentTime, state.duration]);
+  }, [state.currentTime, state.duration, useNative]);
+
+  // ---- Mirror native Media3 state back into React ----
+  // Notification / lock-screen / Bluetooth / Android Auto all drive the native
+  // player directly, so these events are the single source of truth on Android.
+  useEffect(() => {
+    if (!useNative) return;
+
+    const offPosition = nativePlayer.on('positionChanged', (e: any) => {
+      const currentTime = (e?.positionMs ?? 0) / 1000;
+      const duration = (e?.durationMs ?? 0) / 1000;
+      setState(prev => ({
+        ...prev,
+        currentTime,
+        duration: duration > 0 ? duration : prev.duration,
+      }));
+      const now = Date.now();
+      const track = stateRef.current.currentTrack;
+      if (track && now - lastPositionSaveRef.current >= POSITION_SAVE_INTERVAL) {
+        lastPositionSaveRef.current = now;
+        savePosition(track.id, currentTime);
+      }
+    });
+
+    const offState = nativePlayer.on('state', (e: any) => {
+      if (!e?.connected) return;
+      setState(prev => ({
+        ...prev,
+        isPlaying: !!e.isPlaying,
+        isLoading: !!e.isBuffering,
+        duration: e.durationMs > 0 ? e.durationMs / 1000 : prev.duration,
+      }));
+    });
+
+    const offTrack = nativePlayer.on('trackChanged', (e: any) => {
+      const id = e?.trackId;
+      if (!id) return;
+      const prevTrack = stateRef.current.currentTrack;
+      if (prevTrack && prevTrack.id !== id) {
+        clearPosition(prevTrack.id);
+        streamLoggedRef.current.delete(prevTrack.id);
+      }
+      const next = stateRef.current.queue.find(t => t.id === id);
+      if (next) {
+        setState(prev => ({ ...prev, currentTrack: next, currentTime: 0, playbackError: null }));
+        if (!streamLoggedRef.current.has(id)) {
+          streamLoggedRef.current.add(id);
+          logStream(id);
+        }
+        supabase.auth.getUser().then(({ data: { user } }) => {
+          if (user && prevTrack) {
+            trackListeningHistory(user.id, prevTrack.id, Math.floor(prevTrack.duration || 30));
+          }
+        });
+      }
+    });
+
+    const offEnded = nativePlayer.on('queueEnded', () => {
+      setState(prev => ({ ...prev, isPlaying: false }));
+    });
+
+    const offError = nativePlayer.on('error', (e: any) => {
+      const message = /source|4001|2\d{3}/i.test(String(e?.name || ''))
+        ? 'This track could not be played. It may be unavailable offline.'
+        : e?.message || 'Playback failed.';
+      setState(prev => ({
+        ...prev,
+        isPlaying: false,
+        isLoading: false,
+        playbackError: { type: 'source', message, canRetry: true },
+      }));
+      toast.error(message, { duration: 2500 });
+    });
+
+    nativePlayer.getState().then((s) => {
+      if (s?.connected) {
+        setState(prev => ({
+          ...prev,
+          isPlaying: !!s.isPlaying,
+          currentTime: (s.positionMs ?? 0) / 1000,
+          duration: (s.durationMs ?? 0) / 1000,
+        }));
+      }
+    });
+
+    return () => { offPosition(); offState(); offTrack(); offEnded(); offError(); };
+  }, [useNative, logStream]);
 
   return {
     currentTrack: state.currentTrack,
