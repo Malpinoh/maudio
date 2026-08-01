@@ -205,6 +205,50 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
       queue: prev.queue.some(t => t.id === track.id) ? prev.queue : [track, ...prev.queue]
     }));
 
+    // ---- Native Media3 path (Android) ----
+    if (useNative) {
+      try {
+        await nativePlayer.requestNotificationPermission();
+
+        const prevQueue = stateRef.current.queue;
+        const queue = prevQueue.some(t => t.id === track.id) ? prevQueue : [track, ...prevQueue];
+        const resolved = (await Promise.all(queue.map(toNativeTrack))).filter(Boolean) as NativeTrack[];
+        const startIndex = Math.max(0, resolved.findIndex(t => t.id === track.id));
+
+        if (resolved.length === 0) throw new Error('No playable audio source for this track.');
+
+        const savedPos = loadPosition(track.id);
+        const result = await nativePlayer.load(
+          resolved,
+          startIndex,
+          true,
+          savedPos ? Math.round(savedPos * 1000) : 0,
+        );
+        if (playbackLockRef.current !== lockId) return;
+        if (!result) throw new Error('Native player is not ready yet. Try again.');
+
+        setState(prev => ({ ...prev, isPlaying: true, isLoading: false, playbackError: null }));
+
+        if (!streamLoggedRef.current.has(track.id)) {
+          streamLoggedRef.current.add(track.id);
+          logStream(track.id);
+        }
+        cacheTrackInBackground({
+          id: track.id,
+          title: track.title,
+          artist: track.artist,
+          album_name: track.album_name,
+          cover_art_path: track.cover_art_path,
+          audio_file_path: track.audio_file_path,
+          duration: track.duration,
+        }).catch(() => {});
+      } catch (error: any) {
+        if (playbackLockRef.current !== lockId) return;
+        handleAudioError(error, 'playTrack(native)');
+      }
+      return;
+    }
+
     // Detect slow connection for network adaptation hint
     const conn = (navigator as any).connection;
     const slow = conn && (conn.effectiveType === '2g' || conn.effectiveType === 'slow-2g');
