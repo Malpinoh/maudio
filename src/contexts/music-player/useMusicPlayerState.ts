@@ -140,6 +140,29 @@ export const useMusicPlayerState = (externalAudioRef?: React.RefObject<HTMLAudio
   const lastAudioUrlRef = useRef<string>('');
   const lastPositionSaveRef = useRef<number>(0);
 
+  // ---- Native Media3 playback (Android) ----
+  // When the native player is present, audio never touches the WebView: the
+  // foreground MediaLibraryService owns it, which is what keeps lock-screen
+  // playback, the notification, Bluetooth and Android Auto alive on Android 13+.
+  const useNative = isNativePlayerAvailable();
+  const stateRef = useRef<MusicPlayerState>(state);
+  stateRef.current = state;
+
+  const toNativeTrack = useCallback(async (track: Track): Promise<NativeTrack | null> => {
+    if (!track?.audio_file_path) return null;
+    const localUri = await getOfflineFileUri(track.id).catch(() => null);
+    const url = localUri || getValidAudioUrl(track.audio_file_path);
+    return {
+      id: track.id,
+      url,
+      title: track.title,
+      artist: track.artist,
+      album: track.album_name || track.genre || '',
+      artworkUrl: resolveCoverUrl(track.cover_art_path),
+      durationMs: track.duration ? Math.round(track.duration * 1000) : 0,
+    };
+  }, []);
+
   const handleAudioError = useCallback((error: any, context: string = '', audioUrl?: string) => {
     if (error?.name === 'AbortError' || (error instanceof DOMException && error.name === 'AbortError')) return;
     if (error?.message?.includes('interrupted') || error?.message?.includes('aborted')) return;
