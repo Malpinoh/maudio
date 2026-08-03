@@ -1,35 +1,41 @@
-
 import { useState, useEffect } from 'react';
 import { toast } from "sonner";
 import type { Track, TracksFilter } from '@/types/track-types';
-import { fetchTracks } from '@/services/track-service';
+import { useMusicRepository } from '@/core';
 
 // Fix: Use 'export type' for re-exporting types with isolatedModules enabled
 export type { Track, TracksFilter } from '@/types/track-types';
 export { logStreamPlay } from '@/services/track-service';
 
+/** Reads music data exclusively through MusicRepository. */
 export function useTracks(filter: TracksFilter = { published: true, limit: 10 }) {
+  const repository = useMusicRepository();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     async function loadTracks() {
       try {
         setLoading(true);
-        const data = await fetchTracks(filter);
-        setTracks(data);
+        const data = await repository.getTracks(filter);
+        if (!cancelled) setTracks(data);
       } catch (err) {
         console.error('Error fetching tracks:', err);
-        setError(err instanceof Error ? err : new Error('Unknown error fetching tracks'));
-        toast.error('Failed to load tracks');
+        if (!cancelled) {
+          setError(err instanceof Error ? err : new Error('Unknown error fetching tracks'));
+          toast.error('Failed to load tracks');
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     loadTracks();
+    return () => { cancelled = true; };
   }, [
+    repository,
     filter.published, 
     filter.genre, 
     filter.mood, 

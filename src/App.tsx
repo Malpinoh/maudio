@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { MusicPlayerProvider } from "@/contexts/music-player";
+import { ServicesProvider } from "@/core";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { useCapacitor } from "@/hooks/use-capacitor";
 import { NativeBootstrap } from "@/components/NativeBootstrap";
@@ -169,18 +170,20 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <TooltipProvider>
-          <AuthProvider>
-            <MusicPlayerProvider>
-              <Toaster />
-              <Sonner />
-              <NativeBootstrap />
-              <AnimatedSplash />
-              <BrowserRouter>
-                <SwipeNavigator />
-                <AppRoutes />
-              </BrowserRouter>
-            </MusicPlayerProvider>
-          </AuthProvider>
+          <ServicesProvider>
+            <AuthProvider>
+              <MusicPlayerProvider>
+                <Toaster />
+                <Sonner />
+                <NativeBootstrap />
+                <AnimatedSplash />
+                <BrowserRouter>
+                  <SwipeNavigator />
+                  <AppRoutes />
+                </BrowserRouter>
+              </MusicPlayerProvider>
+            </AuthProvider>
+          </ServicesProvider>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
