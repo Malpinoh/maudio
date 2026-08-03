@@ -128,3 +128,31 @@ export function createStorageManager(
 
 export { getOfflineFileUri };
 export type { OfflineTrack, TrackForOffline };
+
+/**
+ * Swap the whole app to S3/CDN-hosted media without touching call sites:
+ * <ServicesProvider mediaProvider={createS3MediaProvider("https://cdn.maudio.app")} />
+ */
+export function createS3MediaProvider(
+  baseUrl: string,
+  prefixes: Partial<Record<MediaKind, string>> = {},
+): RemoteMediaProvider {
+  const root = baseUrl.replace(/\/+$/, "");
+  const folders: Record<MediaKind, string> = {
+    audio: prefixes.audio ?? "audio",
+    cover: prefixes.cover ?? "covers",
+    artist: prefixes.artist ?? "artists",
+  };
+  return {
+    id: "s3",
+    urlFor(kind, key) {
+      if (!key) return "";
+      if (/^(https?|blob|file):/.test(key)) return key;
+      const clean = key.replace(/^\/+/, "");
+      const folder = folders[kind];
+      return clean.startsWith(`${folder}/`)
+        ? `${root}/${clean}`
+        : `${root}/${folder}/${clean}`;
+    },
+  };
+}
