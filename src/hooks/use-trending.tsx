@@ -2,93 +2,36 @@ import { useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Track } from '@/types/track-types';
-import { formatTracks } from '@/services/track-service';
-
-interface TrendingScore {
-  track_id: string;
-  trending_score: number;
-  velocity_score: number;
-  engagement_score: number;
-  recency_score: number;
-  regional_boost: number;
-}
+import { useMusicRepository } from '@/core';
 
 export function useTrending(limit = 50) {
+  const repository = useMusicRepository();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     async function loadTrendingTracks() {
       try {
         setLoading(true);
         setError(null);
-        
-        // Get trending scores from database function
-        const { data: trendingData, error: trendingError } = await supabase.rpc('get_trending_tracks', {
-          limit_count: limit
-        });
-        
-        if (trendingError) {
-          console.error('Error fetching trending data:', trendingError);
-          throw trendingError;
-        }
-        
-        if (!trendingData || trendingData.length === 0) {
-          setTracks([]);
-          return;
-        }
-        
-        // Get track IDs from trending data
-        const trackIds = trendingData.map((item: TrendingScore) => item.track_id);
-        
-        // Fetch actual track data
-        const { data: tracksData, error: tracksError } = await supabase
-          .from('tracks')
-          .select('*')
-          .in('id', trackIds)
-          .eq('published', true);
-        
-        if (tracksError) {
-          throw tracksError;
-        }
-        
-        if (!tracksData) {
-          setTracks([]);
-          return;
-        }
-        
-        // Merge trending scores with track data and sort by trending score
-        const tracksWithScores = tracksData.map(track => {
-          const scoreData = trendingData.find((score: TrendingScore) => score.track_id === track.id);
-          return {
-            ...track,
-            trending_score: scoreData?.trending_score || 0,
-            velocity_score: scoreData?.velocity_score || 0,
-            engagement_score: scoreData?.engagement_score || 0,
-            recency_score: scoreData?.recency_score || 0,
-            regional_boost: scoreData?.regional_boost || 0
-          };
-        });
-        
-        // Sort by trending score descending
-        tracksWithScores.sort((a, b) => (b.trending_score || 0) - (a.trending_score || 0));
-        
-        // Format tracks with proper URLs
-        const formattedTracks = formatTracks(tracksWithScores);
-        setTracks(formattedTracks);
-        
+        const data = await repository.getTrending(limit);
+        if (!cancelled) setTracks(data);
       } catch (err) {
         console.error('Error loading trending tracks:', err);
-        setError(err instanceof Error ? err : new Error('Unknown error loading trending tracks'));
-        toast.error('Failed to load trending tracks');
+        if (!cancelled) {
+          setError(err instanceof Error ? err : new Error('Unknown error loading trending tracks'));
+          toast.error('Failed to load trending tracks');
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     loadTrendingTracks();
-  }, [limit]);
+    return () => { cancelled = true; };
+  }, [limit, repository]);
 
   return { tracks, loading, error };
 }

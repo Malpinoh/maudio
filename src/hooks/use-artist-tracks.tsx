@@ -1,116 +1,71 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Track } from "@/types/track-types";
+import { useMusicRepository, useStorageManager } from "@/core";
 
+/**
+ * Artist tracks are fetched via MusicRepository; the realtime subscription only
+ * keeps the already-loaded list in sync.
+ */
 export function useArtistTracks(artistId: string) {
+  const repository = useMusicRepository();
+  const storage = useStorageManager();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchArtistTracks = async () => {
-      if (!artistId) return;
-      
+    if (!artistId) return;
+    let cancelled = false;
+
+    (async () => {
       try {
         setLoading(true);
-        
-        // First try to get profile ID if artistId is not a UUID
-        let profileId = artistId;
-        
-        // Check if artistId is a UUID pattern
-        const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-        if (!uuidPattern.test(artistId)) {
-          // Try to find the profile by name
-          const { data: profileData } = await supabase
-            .from('profiles')
-            .select('id')
-            .or(`username.ilike.${artistId},full_name.ilike.${artistId}`)
-            .limit(1)
-            .maybeSingle();
-            
-          if (profileData) {
-            profileId = profileData.id;
-          }
-        }
-
-        // Fetch tracks where either the user_id matches, artist_profile_id matches, or artist name matches
-        const { data, error } = await supabase
-          .from('tracks')
-          .select('*')
-          .or(`user_id.eq.${profileId},artist_profile_id.eq.${profileId},artist.ilike.${artistId}`)
-          .order('play_count', { ascending: false });
-          
-        if (error) throw error;
-        
-        // Format track URLs properly
-        const formattedTracks = (data || []).map(track => ({
-          ...track,
-          cover: track.cover_art_path?.startsWith('http') 
-            ? track.cover_art_path 
-            : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/cover_art/${track.cover_art_path}`,
-          audioUrl: track.audio_file_path?.startsWith('http')
-            ? track.audio_file_path
-            : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/audio_files/${track.audio_file_path}`
-        }));
-        
-        setTracks(formattedTracks as Track[]);
+        const data = await repository.getArtistTracks(artistId);
+        if (!cancelled) setTracks(data);
       } catch (error) {
-        console.error('Error fetching artist tracks:', error);
-        toast.error('Failed to load artist tracks');
+        console.error("Error fetching artist tracks:", error);
+        if (!cancelled) toast.error("Failed to load artist tracks");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
-    };
-    
-    fetchArtistTracks();
-    
-    // Set up real-time listener for track updates
+    })();
+
+    const withUrls = (row: any): Track => ({
+      ...(row as Track),
+      cover: storage.coverUrl(row.cover_art_path),
+      audioUrl: storage.audioUrl(row.audio_file_path),
+    });
+
     const channel = supabase
-      .channel('artist-tracks-realtime')
+      .channel("artist-tracks-realtime")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'tracks',
-          filter: `or(user_id.eq.${artistId},artist_profile_id.eq.${artistId})`
+          event: "*",
+          schema: "public",
+          table: "tracks",
+          filter: `or(user_id.eq.${artistId},artist_profile_id.eq.${artistId})`,
         },
         (payload) => {
-          if (payload.eventType === 'UPDATE') {
-            setTracks(prev => prev.map(track => 
-              track.id === payload.new.id ? { 
-                ...payload.new as Track,
-                cover: (payload.new as any).cover_art_path?.startsWith('http') 
-                  ? (payload.new as any).cover_art_path 
-                  : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/cover_art/${(payload.new as any).cover_art_path}`,
-                audioUrl: (payload.new as any).audio_file_path?.startsWith('http')
-                  ? (payload.new as any).audio_file_path
-                  : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/audio_files/${(payload.new as any).audio_file_path}`
-              } : track
-            ));
-          } else if (payload.eventType === 'INSERT') {
-            const newTrack = {
-              ...payload.new as Track,
-              cover: (payload.new as any).cover_art_path?.startsWith('http') 
-                ? (payload.new as any).cover_art_path 
-                : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/cover_art/${(payload.new as any).cover_art_path}`,
-              audioUrl: (payload.new as any).audio_file_path?.startsWith('http')
-                ? (payload.new as any).audio_file_path
-                : `https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public/audio_files/${(payload.new as any).audio_file_path}`
-            };
-            setTracks(prev => [newTrack, ...prev]);
-          } else if (payload.eventType === 'DELETE') {
-            setTracks(prev => prev.filter(track => track.id !== payload.old.id));
+          if (payload.eventType === "UPDATE") {
+            setTracks((prev) =>
+              prev.map((t) => (t.id === (payload.new as any).id ? withUrls(payload.new) : t)),
+            );
+          } else if (payload.eventType === "INSERT") {
+            setTracks((prev) => [withUrls(payload.new), ...prev]);
+          } else if (payload.eventType === "DELETE") {
+            setTracks((prev) => prev.filter((t) => t.id !== (payload.old as any).id));
           }
-        }
+        },
       )
       .subscribe();
-      
+
     return () => {
+      cancelled = true;
       supabase.removeChannel(channel);
     };
-  }, [artistId]);
+  }, [artistId, repository, storage]);
 
   return { tracks, loading };
 }
