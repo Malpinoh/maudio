@@ -1,4 +1,17 @@
-# MAUDIO Core Architecture (Sprint 2 — Phase 1)
+# MAUDIO Architecture
+
+MAUDIO ships **two clients over one backend**:
+
+- **Web Client** — `src/web` (React + Vite): pages, components, hooks, contexts.
+- **Mobile Client** — `src/mobile` + `android/`: Capacitor bridge, native
+  Media3/ExoPlayer player, downloads/cache, notifications, Android Auto.
+  The Web Client reaches native capabilities only through the `@mobile` barrel
+  (`src/mobile/index.ts`), which no-ops in a browser.
+- **Shared** — `src/shared`: Supabase client, MusicRepository, StorageManager,
+  PlayerEngine, DI, types, config, utils. Shared code never imports a client.
+
+Never create a second MAUDIO application or another mobile folder — see
+`CONTRIBUTING.md`.
 
 Three injected services form the foundation of the app. UI never talks to
 Supabase, S3 or the device filesystem directly.
@@ -15,7 +28,7 @@ MusicRepository   StorageManager        PlayerEngine
                         + SQLite (offline)    -> Media3 service (Android)
 ```
 
-## MusicRepository — `src/core/data/MusicRepository.ts`
+## MusicRepository — `src/shared/core/data/MusicRepository.ts`
 
 Single source of all music data: tracks, charts, trending, artists, albums,
 playlists, search, recommendations, similar tracks, user library (liked/saved)
@@ -25,7 +38,7 @@ every row with media URLs resolved through StorageManager (`cover`, `audioUrl`).
 Use it via `const repo = useMusicRepository()`. Do not import `supabase` in a
 page or component for music data.
 
-## StorageManager — `src/core/storage/StorageManager.ts`
+## StorageManager — `src/shared/core/storage/StorageManager.ts`
 
 Unified interface over storage providers:
 
@@ -39,7 +52,7 @@ Unified interface over storage providers:
 
 Use it via `const storage = useStorageManager()`.
 
-## PlayerEngine — `src/core/player/PlayerEngine.ts`
+## PlayerEngine — `src/shared/core/player/PlayerEngine.ts`
 
 Stable facade over the music-player state machine. Exposes current track,
 queue, playback state, progress/position, volume, mute, repeat, shuffle,
@@ -50,7 +63,7 @@ lock screen, Bluetooth, Android Auto); on web/iOS to the `<audio>` element.
 Use it via `const player = usePlayerEngine()`. `player.raw` remains available
 for advanced surfaces (EQ, diagnostics).
 
-## Dependency Injection — `src/core/di/ServicesProvider.tsx`
+## Dependency Injection — `src/shared/core/di/ServicesProvider.tsx`
 
 `<ServicesProvider>` wraps the app in `App.tsx` and builds the container once.
 `useServices()`, `useMusicRepository()` and `useStorageManager()` read from it.

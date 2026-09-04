@@ -7,6 +7,16 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@mobile": ["./src/mobile/index.ts"],
+      "@web/*": [
+        "./src/web/*"
+      ],
+      "@mobile/*": [
+        "./src/mobile/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
       ]
     },
     "skipLibCheck": true,
