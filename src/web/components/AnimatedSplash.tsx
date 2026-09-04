@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import logo from "@web/assets/maudio-logo.png";
-import { isNative } from "@mobile/native";
+import { isNative } from "@mobile";
 
 /**
  * Animated brand splash overlay shown on app launch.

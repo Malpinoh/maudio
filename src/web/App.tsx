@@ -8,8 +8,8 @@ import { ThemeProvider } from "next-themes";
 import { MusicPlayerProvider } from "@web/contexts/music-player";
 import { ServicesProvider } from "@shared/core";
 import { AuthProvider, useAuth } from "@web/contexts/AuthContext";
-import { useCapacitor } from "@mobile/use-capacitor";
-import { NativeBootstrap } from "@mobile/NativeBootstrap";
+import { useCapacitor } from "@mobile";
+import { NativeBootstrap } from "@mobile";
 import { AnimatedSplash } from "@web/components/AnimatedSplash";
 import { SwipeNavigator } from "@web/components/layout/SwipeNavigator";
 

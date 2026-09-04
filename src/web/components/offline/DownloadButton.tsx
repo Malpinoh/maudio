@@ -4,8 +4,8 @@ import { Button } from "@web/components/ui/button";
 import { cn } from "@shared/lib/utils";
 import { toast } from "sonner";
 import { Track } from "@shared/types/track-types";
-import { downloadTrack, deleteDownload, isDownloaded } from "@mobile/offline/storage";
-import { hapticLight } from "@mobile/native";
+import { downloadTrack, deleteDownload, isDownloaded } from "@mobile";
+import { hapticLight } from "@mobile";
 
 interface Props {
   track: Track;

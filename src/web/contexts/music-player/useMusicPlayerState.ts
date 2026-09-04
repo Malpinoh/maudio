@@ -5,10 +5,10 @@ import { RepeatMode, PlaybackError, PlaybackSource } from '@web/contexts/music-p
 import { supabase } from '@shared/integrations/supabase/client';
 import { useStreamLogger } from '@web/hooks/use-stream-logger';
 import { toast } from 'sonner';
-import { getOfflineUri, cacheTrackInBackground } from '@mobile/offline/storage';
-import { isOnline as isNetworkOnline } from '@mobile/offline/network';
-import { getOfflineFileUri } from '@mobile/offline/storage';
-import { nativePlayer, isNativePlayerAvailable, NativeTrack } from '@mobile/nativePlayer';
+import { getOfflineUri, cacheTrackInBackground } from '@mobile';
+import { isOnline as isNetworkOnline } from '@mobile';
+import { getOfflineFileUri } from '@mobile';
+import { nativePlayer, isNativePlayerAvailable, NativeTrack } from '@mobile';
 
 const SUPABASE_PUBLIC = 'https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public';
 

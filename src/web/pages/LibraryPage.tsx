@@ -9,11 +9,11 @@ import { TrackCard } from "@web/components/ui/track-card";
 import { Track } from "@shared/types/track-types";
 import { Skeleton } from "@web/components/ui/skeleton";
 import { useIsMobile } from "@web/hooks/use-mobile";
-import { listDownloads, listOfflineMix, deleteDownload, offlineToTrack, getCacheUsage, clearCache, OfflineTrack } from "@mobile/offline/storage";
+import { listDownloads, listOfflineMix, deleteDownload, offlineToTrack, getCacheUsage, clearCache, OfflineTrack } from "@mobile";
 import { Button } from "@web/components/ui/button";
 import { useMusicPlayer } from "@web/contexts/music-player";
 import { toast } from "sonner";
-import { hapticLight } from "@mobile/native";
+import { hapticLight } from "@mobile";
 
 const LibraryPage = () => {
   const { user } = useAuth();

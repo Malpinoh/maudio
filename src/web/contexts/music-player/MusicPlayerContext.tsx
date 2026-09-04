@@ -4,7 +4,7 @@ import { useMusicPlayerState } from './useMusicPlayerState';
 import { useAudioEngine } from '@web/hooks/use-audio-engine';
 import { toast } from 'sonner';
 import { supabase } from '@shared/integrations/supabase/client';
-import { nativePlayer, isNativePlayerAvailable } from '@mobile/nativePlayer';
+import { nativePlayer, isNativePlayerAvailable } from '@mobile';
 
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined);
 

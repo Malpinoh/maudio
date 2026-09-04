@@ -3,7 +3,7 @@ import { useMusicPlayer } from "@web/contexts/music-player";
 import { Play, Pause, SkipForward, RotateCcw, AlertCircle } from "lucide-react";
 import { cn } from "@shared/lib/utils";
 import { MobileFullscreenPlayer } from "./MobileFullscreenPlayer";
-import { hapticLight } from "@mobile/native";
+import { hapticLight } from "@mobile";
 
 /**
  * Apple-Music–style floating mini player.
