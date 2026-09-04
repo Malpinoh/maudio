@@ -19,24 +19,9 @@
  * registers it at boot. On the Web Client the no-op implementation below is
  * used, so shared code never imports client-specific modules.
  */
-export interface OfflineTrack {
-  id: string;
-  title?: string | null;
-  artist?: string | null;
-  cover_art_path?: string | null;
-  duration?: number | null;
-  [key: string]: any;
-}
+export type OfflineTrack = Record<string, any>;
 
-export interface TrackForOffline {
-  id: string;
-  title?: string | null;
-  artist?: string | null;
-  audio_file_path?: string | null;
-  cover_art_path?: string | null;
-  duration?: number | null;
-  [key: string]: any;
-}
+export type TrackForOffline = Record<string, any> & { id: string };
 
 export interface DeviceStorage {
   isDownloaded(trackId: string): Promise<boolean>;

@@ -8,6 +8,7 @@
       "@/*": [
         "./src/*"
       ],
+      "@mobile": ["./src/mobile/index.ts"],
       "@web/*": [
         "./src/web/*"
       ],
