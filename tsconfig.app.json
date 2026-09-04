@@ -19,6 +19,15 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@web/*": [
+        "./src/web/*"
+      ],
+      "@mobile/*": [
+        "./src/mobile/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
       ]
     },
     "skipLibCheck": true,
