@@ -7,29 +7,80 @@
  *  - remote media  : AWS S3 (future) / Supabase Storage (current) for audio,
  *                    album artwork and artist images.
  *  - device storage: Capacitor Filesystem + SQLite for downloads and the
- *                    200 MB LRU audio cache (see src/lib/offline/storage.ts).
+ *                    200 MB LRU audio cache (provided by the Mobile Client).
  *  - metadata      : Supabase (rows, not files) — exposed via MusicRepository.
  *
  * Media is addressed by *key* (e.g. `audio/{artistId}/{albumId}/{trackId}.mp3`)
  * so the remote provider can be swapped without touching callers.
  */
-import {
-  cacheTrackInBackground,
-  deleteDownload,
-  downloadTrack,
-  getCacheUsage,
-  getOfflineFileUri,
-  getOfflineUri,
-  isCached,
-  isDownloaded,
-  listCached,
-  listDownloads,
-  listOfflineMix,
-  clearCache,
-  offlineToTrack,
-  type OfflineTrack,
-  type TrackForOffline,
-} from "@mobile/offline/storage";
+/**
+ * Device storage (downloads + LRU cache) is a *client capability*, not shared
+ * code: the Mobile Client provides the Capacitor/SQLite implementation and
+ * registers it at boot. On the Web Client the no-op implementation below is
+ * used, so shared code never imports client-specific modules.
+ */
+export interface OfflineTrack {
+  id: string;
+  title?: string | null;
+  artist?: string | null;
+  cover_art_path?: string | null;
+  duration?: number | null;
+  [key: string]: any;
+}
+
+export interface TrackForOffline {
+  id: string;
+  title?: string | null;
+  artist?: string | null;
+  audio_file_path?: string | null;
+  cover_art_path?: string | null;
+  duration?: number | null;
+  [key: string]: any;
+}
+
+export interface DeviceStorage {
+  isDownloaded(trackId: string): Promise<boolean>;
+  isCached(trackId: string): Promise<boolean>;
+  getOfflineUri(trackId: string): Promise<string | null>;
+  getOfflineFileUri(trackId: string): Promise<string | null>;
+  downloadTrack(track: TrackForOffline, onProgress?: (p: number) => void): Promise<void>;
+  deleteDownload(trackId: string): Promise<void>;
+  listDownloads(): Promise<OfflineTrack[]>;
+  listCached(): Promise<OfflineTrack[]>;
+  listOfflineMix(): Promise<OfflineTrack[]>;
+  cacheTrackInBackground(track: TrackForOffline): Promise<void>;
+  getCacheUsage(): Promise<{ used: number; limit: number }>;
+  clearCache(): Promise<void>;
+  offlineToTrack(entry: OfflineTrack): any;
+}
+
+/** Browser fallback: nothing is stored on the device. */
+export const noopDeviceStorage: DeviceStorage = {
+  isDownloaded: async () => false,
+  isCached: async () => false,
+  getOfflineUri: async () => null,
+  getOfflineFileUri: async () => null,
+  downloadTrack: async () => {},
+  deleteDownload: async () => {},
+  listDownloads: async () => [],
+  listCached: async () => [],
+  listOfflineMix: async () => [],
+  cacheTrackInBackground: async () => {},
+  getCacheUsage: async () => ({ used: 0, limit: 0 }),
+  clearCache: async () => {},
+  offlineToTrack: (entry) => entry,
+};
+
+let activeDeviceStorage: DeviceStorage = noopDeviceStorage;
+
+/** Called once at boot by the client that owns device storage. */
+export function registerDeviceStorage(impl: DeviceStorage): void {
+  activeDeviceStorage = impl;
+}
+
+export function getDeviceStorage(): DeviceStorage {
+  return activeDeviceStorage;
+}
 
 export type MediaKind = "audio" | "cover" | "artist";
 
@@ -100,6 +151,7 @@ export interface StorageManager {
 
 export function createStorageManager(
   provider: RemoteMediaProvider = supabaseMediaProvider,
+  device: () => DeviceStorage = getDeviceStorage,
 ): StorageManager {
   return {
     audioUrl: (key) => provider.urlFor("audio", key),
@@ -107,24 +159,25 @@ export function createStorageManager(
     artistImageUrl: (key) => provider.urlFor("artist", key),
 
     async resolvePlaybackUrl(trackId, remoteKey) {
-      const local = await getOfflineUri(trackId).catch(() => null);
+      const local = await device().getOfflineUri(trackId).catch(() => null);
       if (local) return local;
       return provider.urlFor("audio", remoteKey);
     },
 
-    isDownloaded,
-    isCached,
-    download: downloadTrack,
-    removeDownload: deleteDownload,
-    listDownloads,
-    listCached,
-    listOfflineMix,
-    cacheInBackground: cacheTrackInBackground,
-    cacheUsage: getCacheUsage,
-    clearCache,
-    toTrack: offlineToTrack,
+    isDownloaded: (id) => device().isDownloaded(id),
+    isCached: (id) => device().isCached(id),
+    download: (track, onProgress) => device().downloadTrack(track, onProgress),
+    removeDownload: (id) => device().deleteDownload(id),
+    listDownloads: () => device().listDownloads(),
+    listCached: () => device().listCached(),
+    listOfflineMix: () => device().listOfflineMix(),
+    cacheInBackground: (track) => device().cacheTrackInBackground(track),
+    cacheUsage: () => device().getCacheUsage(),
+    clearCache: () => device().clearCache(),
+    toTrack: (entry) => device().offlineToTrack(entry),
   };
 }
 
-export { getOfflineFileUri };
-export type { OfflineTrack, TrackForOffline };
+/** Best local file:// URI for a track (used by the native player bridge). */
+export const getOfflineFileUri = (trackId: string) =>
+  getDeviceStorage().getOfflineFileUri(trackId);
