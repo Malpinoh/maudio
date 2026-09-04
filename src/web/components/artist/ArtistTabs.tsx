@@ -1,12 +1,12 @@
 
 import { Loader2, CheckCircle } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Track } from "@/types/track-types";
-import type { ArtistProfile } from "@/hooks/use-artist-profile";
-import { Card, CardContent } from "@/components/ui/card";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@web/components/ui/tabs";
+import type { Track } from "@shared/types/track-types";
+import type { ArtistProfile } from "@web/hooks/use-artist-profile";
+import { Card, CardContent } from "@web/components/ui/card";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import { CollapsibleAlbum } from "./CollapsibleAlbum";
-import { formatDuration } from "@/utils/formatTime";
+import { formatDuration } from "@shared/utils/formatTime";
 
 interface ArtistTabsProps {
   artist: ArtistProfile;

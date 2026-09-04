@@ -7,13 +7,13 @@
  * Android. UI code should depend on this interface, never on the audio element
  * or the native bridge.
  */
-import type { Track } from "@/types/track-types";
+import type { Track } from "@shared/types/track-types";
 import type {
   MusicPlayerContextType,
   PlaybackError,
   PlaybackSource,
   RepeatMode,
-} from "@/contexts/music-player/types";
+} from "@web/contexts/music-player/types";
 
 export interface PlayerSnapshot {
   currentTrack: Track | null;

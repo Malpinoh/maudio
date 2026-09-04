@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
-import { useFeaturedBanners, MAX_BANNERS, FeaturedBanner } from "@/hooks/use-featured-banners";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useFeaturedBanners, MAX_BANNERS, FeaturedBanner } from "@web/hooks/use-featured-banners";
+import { supabase } from "@shared/integrations/supabase/client";
+import { Button } from "@web/components/ui/button";
+import { Switch } from "@web/components/ui/switch";
+import { Card } from "@web/components/ui/card";
+import { Input } from "@web/components/ui/input";
 import { Upload, Trash2, ChevronUp, ChevronDown, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 

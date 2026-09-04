@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@web/components/ui/card";
+import { Button } from "@web/components/ui/button";
+import { Badge } from "@web/components/ui/badge";
 import { DollarSign, TrendingUp, Music, CreditCard } from "lucide-react";
-import { useRoyaltyData } from "@/hooks/use-royalty-data";
+import { useRoyaltyData } from "@web/hooks/use-royalty-data";
 import { PayoutRequestModal } from "./PayoutRequestModal";
 import { useState } from "react";
 

@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import MainLayout from "@/components/layout/MainLayout";
-import { HeroSection } from "@/components/sections/HeroSection";
-import { FeaturedTracks } from "@/components/sections/FeaturedSection";
-import { FeaturedAlbums } from "@/components/sections/AlbumsSection";
-import { RecentPlaysSection } from "@/components/sections/RecentPlaysSection";
-import { TrendingArtists, FeaturedPlaylists, PersonalizedRecommendations } from "@/components/sections/RecommendedSection";
-import { BrowseByGenre } from "@/components/sections/GenreSection";
-import { TopChartsSection } from "@/components/sections/TopChartsSection";
-import { SearchBar } from "@/components/layout/SearchBar";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { MobileHomeHeader, type HomeFilter } from "@/components/layout/MobileHomeHeader";
-import { OfflineHomeSection } from "@/components/sections/OfflineHomeSection";
-import { isOnline as checkOnline, onNetworkChange } from "@/lib/offline/network";
+import MainLayout from "@web/components/layout/MainLayout";
+import { HeroSection } from "@web/components/sections/HeroSection";
+import { FeaturedTracks } from "@web/components/sections/FeaturedSection";
+import { FeaturedAlbums } from "@web/components/sections/AlbumsSection";
+import { RecentPlaysSection } from "@web/components/sections/RecentPlaysSection";
+import { TrendingArtists, FeaturedPlaylists, PersonalizedRecommendations } from "@web/components/sections/RecommendedSection";
+import { BrowseByGenre } from "@web/components/sections/GenreSection";
+import { TopChartsSection } from "@web/components/sections/TopChartsSection";
+import { SearchBar } from "@web/components/layout/SearchBar";
+import { useIsMobile } from "@web/hooks/use-mobile";
+import { MobileHomeHeader, type HomeFilter } from "@web/components/layout/MobileHomeHeader";
+import { OfflineHomeSection } from "@web/components/sections/OfflineHomeSection";
+import { isOnline as checkOnline, onNetworkChange } from "@mobile/offline/network";
 
 const Index = () => {
   const isMobile = useIsMobile();

@@ -1,6 +1,6 @@
 
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@web/components/ui/input";
 import { 
   Table, 
   TableBody, 
@@ -9,10 +9,10 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from "@/components/ui/table";
+} from "@web/components/ui/table";
 import { CommentItem } from "./CommentItem";
 import { Comment } from "./types";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@web/hooks/use-mobile";
 import { useState } from "react";
 
 interface CommentsListProps {

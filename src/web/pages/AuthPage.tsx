@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@web/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@web/components/ui/tabs";
+import { Label } from "@web/components/ui/label";
+import { Alert, AlertDescription } from "@web/components/ui/alert";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useAuth } from "@web/contexts/AuthContext";
 import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import maudioLogo from "@/assets/maudio-logo.png";
+import maudioLogo from "@web/assets/maudio-logo.png";
 
 const AuthPage = () => {
   const [email, setEmail] = useState("");

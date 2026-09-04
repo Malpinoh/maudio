@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { hapticLight } from "@/lib/native";
+import { useAuth } from "@web/contexts/AuthContext";
+import { hapticLight } from "@mobile/native";
 
 /**
  * Native-style horizontal swipe navigation between the four bottom-nav tabs.

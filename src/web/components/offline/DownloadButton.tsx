@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Download, Check, Loader2, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@web/components/ui/button";
+import { cn } from "@shared/lib/utils";
 import { toast } from "sonner";
-import { Track } from "@/types/track-types";
-import { downloadTrack, deleteDownload, isDownloaded } from "@/lib/offline/storage";
-import { hapticLight } from "@/lib/native";
+import { Track } from "@shared/types/track-types";
+import { downloadTrack, deleteDownload, isDownloaded } from "@mobile/offline/storage";
+import { hapticLight } from "@mobile/native";
 
 interface Props {
   track: Track;

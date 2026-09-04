@@ -7,12 +7,12 @@ import {
   Trash2,
   Shield 
 } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { TableCell, TableRow } from "@/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@web/components/ui/dropdown-menu";
+import { Button } from "@web/components/ui/button";
+import { Badge } from "@web/components/ui/badge";
+import { TableCell, TableRow } from "@web/components/ui/table";
 import { Comment } from "./types";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@web/components/ui/avatar";
 
 interface CommentItemProps {
   comment: Comment;

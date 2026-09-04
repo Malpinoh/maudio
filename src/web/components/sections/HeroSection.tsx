@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useFeaturedBanners } from "@/hooks/use-featured-banners";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
+import { useFeaturedBanners } from "@web/hooks/use-featured-banners";
+import { useIsMobile } from "@web/hooks/use-mobile";
+import { cn } from "@shared/lib/utils";
 
 export function HeroSection() {
   const { banners, loading } = useFeaturedBanners(true);

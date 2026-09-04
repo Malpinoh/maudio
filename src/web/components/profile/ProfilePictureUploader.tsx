@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useAuth } from "@web/contexts/AuthContext";
 import { toast } from "sonner";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@web/components/ui/avatar";
+import { Button } from "@web/components/ui/button";
 import { Upload, Camera } from "lucide-react";
 
 interface ProfilePictureUploaderProps {

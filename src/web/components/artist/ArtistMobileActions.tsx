@@ -1,8 +1,8 @@
 
 import { Play, Heart, Share, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useMusicPlayer } from "@/contexts/MusicPlayerContext";
-import { shareContent } from "@/lib/share";
+import { Button } from "@web/components/ui/button";
+import { useMusicPlayer } from "@web/contexts/MusicPlayerContext";
+import { shareContent } from "@shared/lib/share";
 import { toast } from "sonner";
 import { useParams } from "react-router-dom";
 

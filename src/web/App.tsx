@@ -1,17 +1,17 @@
 import React from 'react';
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@web/components/ui/toaster";
+import { Toaster as Sonner } from "@web/components/ui/sonner";
+import { TooltipProvider } from "@web/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
-import { MusicPlayerProvider } from "@/contexts/music-player";
-import { ServicesProvider } from "@/core";
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { useCapacitor } from "@/hooks/use-capacitor";
-import { NativeBootstrap } from "@/components/NativeBootstrap";
-import { AnimatedSplash } from "@/components/AnimatedSplash";
-import { SwipeNavigator } from "@/components/layout/SwipeNavigator";
+import { MusicPlayerProvider } from "@web/contexts/music-player";
+import { ServicesProvider } from "@shared/core";
+import { AuthProvider, useAuth } from "@web/contexts/AuthContext";
+import { useCapacitor } from "@mobile/use-capacitor";
+import { NativeBootstrap } from "@mobile/NativeBootstrap";
+import { AnimatedSplash } from "@web/components/AnimatedSplash";
+import { SwipeNavigator } from "@web/components/layout/SwipeNavigator";
 
 import Index from "./pages/Index";
 import LoginPage from "./pages/LoginPage";

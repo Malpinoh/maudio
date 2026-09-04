@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useRef, useState, useCallback, useEffect } from 'react';
 import { MusicPlayerContextType } from './types';
 import { useMusicPlayerState } from './useMusicPlayerState';
-import { useAudioEngine } from '@/hooks/use-audio-engine';
+import { useAudioEngine } from '@web/hooks/use-audio-engine';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
-import { nativePlayer, isNativePlayerAvailable } from '@/lib/native/nativePlayer';
+import { supabase } from '@shared/integrations/supabase/client';
+import { nativePlayer, isNativePlayerAvailable } from '@mobile/nativePlayer';
 
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined);
 

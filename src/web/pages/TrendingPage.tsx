@@ -1,10 +1,10 @@
-import MainLayout from "@/components/layout/MainLayout";
-import { TrackCard } from "@/components/ui/track-card";
-import { useTrending } from "@/hooks/use-trending";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import MainLayout from "@web/components/layout/MainLayout";
+import { TrackCard } from "@web/components/ui/track-card";
+import { useTrending } from "@web/hooks/use-trending";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { Button } from "@web/components/ui/button";
 import { Play, TrendingUp, Flame } from "lucide-react";
-import { useMusicPlayer } from "@/contexts/MusicPlayerContext";
+import { useMusicPlayer } from "@web/contexts/MusicPlayerContext";
 
 export default function TrendingPage() {
   const { tracks, loading, error } = useTrending(100);

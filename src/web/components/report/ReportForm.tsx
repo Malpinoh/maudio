@@ -1,22 +1,22 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useToast } from "@web/components/ui/use-toast";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Label } from "@web/components/ui/label";
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue 
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@web/components/ui/select";
+import { Textarea } from "@web/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@web/components/ui/card";
 import { AlertTriangle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useAuth } from "@web/contexts/AuthContext";
 
 const ReportForm = () => {
   const [type, setType] = useState("Content");

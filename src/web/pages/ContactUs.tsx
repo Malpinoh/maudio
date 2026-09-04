@@ -1,11 +1,11 @@
 
 import { useState } from "react";
-import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/contexts/AuthContext";
+import MainLayout from "@web/components/layout/MainLayout";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Textarea } from "@web/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@web/components/ui/card";
+import { useAuth } from "@web/contexts/AuthContext";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { ChevronLeft, Mail, MessageSquare, Phone, MapPin } from "lucide-react";

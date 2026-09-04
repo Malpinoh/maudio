@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import MainLayout from "@/components/layout/MainLayout";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useTracks, TracksFilter } from "@/hooks/use-tracks";
-import { useAvailableRegions } from "@/hooks/use-regions";
-import { Badge } from "@/components/ui/badge";
+import MainLayout from "@web/components/layout/MainLayout";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@web/components/ui/select";
+import { Button } from "@web/components/ui/button";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { useTracks, TracksFilter } from "@web/hooks/use-tracks";
+import { useAvailableRegions } from "@web/hooks/use-regions";
+import { Badge } from "@web/components/ui/badge";
 import { Globe, MapPin, Trophy, TrendingUp, Play } from "lucide-react";
-import { useUserLocation } from "@/hooks/use-user-location";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useUserLocation } from "@web/hooks/use-user-location";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { useIsMobile } from "@web/hooks/use-mobile";
 
 const TrackRanking = ({ rank, track }: { rank: number; track: any }) => {
   const { playTrack, currentTrack, isPlaying, togglePlay } = useMusicPlayer();

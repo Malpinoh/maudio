@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { UserCheck, UserPlus, BadgeCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@web/components/ui/button";
 
 interface ArtistCardProps {
   id: string;

@@ -1,14 +1,14 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { shareContent } from '@/lib/share';
-import { Track } from '@/types/track-types';
-import { RepeatMode, PlaybackError, PlaybackSource } from '@/contexts/music-player/types';
-import { supabase } from '@/integrations/supabase/client';
-import { useStreamLogger } from '@/hooks/use-stream-logger';
+import { shareContent } from '@shared/lib/share';
+import { Track } from '@shared/types/track-types';
+import { RepeatMode, PlaybackError, PlaybackSource } from '@web/contexts/music-player/types';
+import { supabase } from '@shared/integrations/supabase/client';
+import { useStreamLogger } from '@web/hooks/use-stream-logger';
 import { toast } from 'sonner';
-import { getOfflineUri, cacheTrackInBackground } from '@/lib/offline/storage';
-import { isOnline as isNetworkOnline } from '@/lib/offline/network';
-import { getOfflineFileUri } from '@/lib/offline/storage';
-import { nativePlayer, isNativePlayerAvailable, NativeTrack } from '@/lib/native/nativePlayer';
+import { getOfflineUri, cacheTrackInBackground } from '@mobile/offline/storage';
+import { isOnline as isNetworkOnline } from '@mobile/offline/network';
+import { getOfflineFileUri } from '@mobile/offline/storage';
+import { nativePlayer, isNativePlayerAvailable, NativeTrack } from '@mobile/nativePlayer';
 
 const SUPABASE_PUBLIC = 'https://qkpjlfcpncvvjyzfolag.supabase.co/storage/v1/object/public';
 

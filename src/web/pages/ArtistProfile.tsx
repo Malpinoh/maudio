@@ -1,19 +1,19 @@
 
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import MainLayout from "@/components/layout/MainLayout";
-import { useArtistProfile } from "@/hooks/use-artist-profile";
-import { useArtistTracks } from "@/hooks/use-artist-tracks";
-import { ArtistHeader } from "@/components/artist/ArtistHeader";
-import { ArtistMobileActions } from "@/components/artist/ArtistMobileActions";
-import { ArtistTabs } from "@/components/artist/ArtistTabs";
-import { ArtistStatsDisplay } from "@/components/artist/ArtistStatsDisplay";
-import { ArtistLoadingState } from "@/components/artist/ArtistLoadingState";
-import { ArtistNotFound } from "@/components/artist/ArtistNotFound";
-import { ArtistClaimModal } from "@/components/artist/ArtistClaimModal";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
+import MainLayout from "@web/components/layout/MainLayout";
+import { useArtistProfile } from "@web/hooks/use-artist-profile";
+import { useArtistTracks } from "@web/hooks/use-artist-tracks";
+import { ArtistHeader } from "@web/components/artist/ArtistHeader";
+import { ArtistMobileActions } from "@web/components/artist/ArtistMobileActions";
+import { ArtistTabs } from "@web/components/artist/ArtistTabs";
+import { ArtistStatsDisplay } from "@web/components/artist/ArtistStatsDisplay";
+import { ArtistLoadingState } from "@web/components/artist/ArtistLoadingState";
+import { ArtistNotFound } from "@web/components/artist/ArtistNotFound";
+import { ArtistClaimModal } from "@web/components/artist/ArtistClaimModal";
+import { useIsMobile } from "@web/hooks/use-mobile";
+import { useAuth } from "@web/contexts/AuthContext";
+import { Button } from "@web/components/ui/button";
 import { Crown } from "lucide-react";
 import { useState } from "react";
 

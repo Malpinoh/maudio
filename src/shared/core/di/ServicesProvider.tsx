@@ -12,11 +12,11 @@ import {
   supabaseMediaProvider,
   type RemoteMediaProvider,
   type StorageManager,
-} from "@/core/storage/StorageManager";
+} from "@shared/core/storage/StorageManager";
 import {
   createMusicRepository,
   type MusicRepository,
-} from "@/core/data/MusicRepository";
+} from "@shared/core/data/MusicRepository";
 
 export interface Services {
   storage: StorageManager;

@@ -1,8 +1,8 @@
 
 import { Heart, Users, Music, Share, Loader2, CheckCircle } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import type { ArtistProfile } from "@/hooks/use-artist-profile";
+import { Avatar } from "@web/components/ui/avatar";
+import { Button } from "@web/components/ui/button";
+import type { ArtistProfile } from "@web/hooks/use-artist-profile";
 
 interface ArtistHeaderProps {
   artist: ArtistProfile;

@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import MainLayout from "@web/components/layout/MainLayout";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
 import { Search } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { PlaylistCard } from "@/components/ui/playlist-card";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { PlaylistCard } from "@web/components/ui/playlist-card";
+import { useAuth } from "@web/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
 import { toast } from "sonner";
-import { CreatePlaylistModal } from "@/components/playlist/CreatePlaylistModal";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { CreatePlaylistModal } from "@web/components/playlist/CreatePlaylistModal";
+import { useIsMobile } from "@web/hooks/use-mobile";
 import { Link } from "react-router-dom";
 
 interface Playlist {

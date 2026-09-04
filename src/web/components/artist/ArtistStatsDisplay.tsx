@@ -1,10 +1,10 @@
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@web/components/ui/card";
 import { Users, Play, Calendar, Music } from "lucide-react";
-import { useArtistProfile } from "@/hooks/use-artist-profile";
-import { useArtistTracks } from "@/hooks/use-artist-tracks";
+import { useArtistProfile } from "@web/hooks/use-artist-profile";
+import { useArtistTracks } from "@web/hooks/use-artist-tracks";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@shared/integrations/supabase/client";
 
 interface ArtistStatsDisplayProps {
   artistId: string;

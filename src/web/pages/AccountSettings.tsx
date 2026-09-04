@@ -2,23 +2,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
-import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { supabase } from "@/integrations/supabase/client";
+import MainLayout from "@web/components/layout/MainLayout";
+import { useAuth } from "@web/contexts/AuthContext";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Textarea } from "@web/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@web/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@web/components/ui/tabs";
+import { Switch } from "@web/components/ui/switch";
+import { supabase } from "@shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { UserCircle, Bell, Lock, LogOut, Camera, Music, Globe, Users, Headphones } from "lucide-react";
-import { VerificationBadgeRequest } from "@/components/profile/VerificationBadgeRequest";
-import { useAudioPreferences } from "@/hooks/use-audio-preferences";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { AudioEqualizer } from "@/components/player/AudioEqualizer";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
+import { VerificationBadgeRequest } from "@web/components/profile/VerificationBadgeRequest";
+import { useAudioPreferences } from "@web/hooks/use-audio-preferences";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { AudioEqualizer } from "@web/components/player/AudioEqualizer";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@web/components/ui/select";
+import { Slider } from "@web/components/ui/slider";
 
 function PlaybackSettingsTab() {
   const { preferences, updatePreference, resetPreferences } = useAudioPreferences();

@@ -1,13 +1,13 @@
 import React from "react";
 import { Play, Pause, Heart, AlertCircle, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { Button } from "@web/components/ui/button";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import { Link } from "react-router-dom";
-import { Track } from "@/types/track-types";
+import { Track } from "@shared/types/track-types";
 import { toast } from "sonner";
-import { formatDuration } from "@/utils/formatTime";
-import { supabase } from "@/integrations/supabase/client";
-import { DownloadButton } from "@/components/offline/DownloadButton";
+import { formatDuration } from "@shared/utils/formatTime";
+import { supabase } from "@shared/integrations/supabase/client";
+import { DownloadButton } from "@web/components/offline/DownloadButton";
 
 interface TrackCardProps {
   track: Track;

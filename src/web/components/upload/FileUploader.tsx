@@ -1,8 +1,8 @@
 
 import React, { useState, useRef } from "react";
 import { Upload, FileAudio, FileImage, AlertCircle, Loader2, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@web/components/ui/button";
+import { supabase } from "@shared/integrations/supabase/client";
 import { toast } from "sonner";
 
 interface FileUploaderProps {

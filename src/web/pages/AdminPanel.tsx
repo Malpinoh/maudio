@@ -1,17 +1,17 @@
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@web/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
-import { AdminAuth } from "@/components/admin/AdminAuth";
-import { Analytics } from "@/components/admin/Analytics";
-import { UsersManagement } from "@/components/admin/UsersManagement";
-import { SongsManagement } from "@/components/admin/SongsManagement";
-import { UploadsManagement } from "@/components/admin/UploadsManagement";
-import { ReportsManagement } from "@/components/admin/ReportsManagement";
-import { CommentsManagement } from "@/components/admin/CommentsManagement";
-import { VerificationManagement } from "@/components/admin/VerificationManagement";
-import { PayoutsManagement } from "@/components/admin/PayoutsManagement";
-import { FeaturedBannersManagement } from "@/components/admin/FeaturedBannersManagement";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MainLayout from "@web/components/layout/MainLayout";
+import { AdminAuth } from "@web/components/admin/AdminAuth";
+import { Analytics } from "@web/components/admin/Analytics";
+import { UsersManagement } from "@web/components/admin/UsersManagement";
+import { SongsManagement } from "@web/components/admin/SongsManagement";
+import { UploadsManagement } from "@web/components/admin/UploadsManagement";
+import { ReportsManagement } from "@web/components/admin/ReportsManagement";
+import { CommentsManagement } from "@web/components/admin/CommentsManagement";
+import { VerificationManagement } from "@web/components/admin/VerificationManagement";
+import { PayoutsManagement } from "@web/components/admin/PayoutsManagement";
+import { FeaturedBannersManagement } from "@web/components/admin/FeaturedBannersManagement";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@web/components/ui/tabs";
 import { 
   BarChart3, 
   Users, 
@@ -25,10 +25,10 @@ import {
   Image as ImageIcon
 } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import maudioLogo from "@/assets/maudio-logo.png";
+import { Button } from "@web/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@web/components/ui/sheet";
+import { ScrollArea } from "@web/components/ui/scroll-area";
+import maudioLogo from "@web/assets/maudio-logo.png";
 
 const adminTabs = [
   { value: "analytics", label: "Analytics", icon: BarChart3 },

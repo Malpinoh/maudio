@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Home, Search, Library, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
+import { useAuth } from "@web/contexts/AuthContext";
+import { cn } from "@shared/lib/utils";
 
 const MobileBottomNav = () => {
   const location = useLocation();

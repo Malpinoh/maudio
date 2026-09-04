@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@web/components/ui/button";
 import { Play, MoreHorizontal } from "lucide-react";
 
 interface Track {

@@ -1,8 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from "sonner";
-import type { Track } from '@/types/track-types';
-import { useMusicRepository } from '@/core';
+import type { Track } from '@shared/types/track-types';
+import { useMusicRepository } from '@shared/core';
 
 export function useTrack(id: string | undefined) {
   const repository = useMusicRepository();

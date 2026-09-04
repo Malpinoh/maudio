@@ -1,23 +1,23 @@
-import { useMusicPlayer } from "@/contexts/music-player";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import { 
   Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, 
   Repeat, Repeat1, Shuffle, Heart, ListMusic, MessageSquare,
   AlertCircle, RotateCcw, ChevronUp, ChevronDown
 } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
+import { Slider } from "@web/components/ui/slider";
+import { Button } from "@web/components/ui/button";
 import { useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@web/components/ui/sheet";
+import { Separator } from "@web/components/ui/separator";
+import { ScrollArea } from "@web/components/ui/scroll-area";
 import { Link } from "react-router-dom";
-import { useTrackComments } from "@/hooks/use-track-comments";
-import { formatTime } from "@/utils/formatTime";
-import { QualitySelector, type AudioQualityTier } from "@/components/player/QualitySelector";
-import { HiResBadge } from "@/components/player/HiResBadge";
-import { useAudioPreferences } from "@/hooks/use-audio-preferences";
-import { CommentsSection } from "@/components/player/CommentsSection";
-import { PlaybackDiagnostics } from "@/components/player/PlaybackDiagnostics";
+import { useTrackComments } from "@web/hooks/use-track-comments";
+import { formatTime } from "@shared/utils/formatTime";
+import { QualitySelector, type AudioQualityTier } from "@web/components/player/QualitySelector";
+import { HiResBadge } from "@web/components/player/HiResBadge";
+import { useAudioPreferences } from "@web/hooks/use-audio-preferences";
+import { CommentsSection } from "@web/components/player/CommentsSection";
+import { PlaybackDiagnostics } from "@web/components/player/PlaybackDiagnostics";
 
 const MusicPlayer = () => {
   const { 

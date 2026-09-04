@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
-import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
+import MainLayout from "@web/components/layout/MainLayout";
+import { Button } from "@web/components/ui/button";
 import { ArrowLeft, Play, Settings, Edit2, Share } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useAuth } from "@web/contexts/AuthContext";
 import { toast } from "sonner";
-import { shareContent } from "@/lib/share";
-import { PlaylistManager } from "@/components/playlist/PlaylistManager";
-import { PlaylistFollowButton } from "@/components/playlist/PlaylistFollowButton";
-import { SavePlaylistButton } from "@/components/playlist/SavePlaylistButton";
-import { PlaylistEditModal } from "@/components/playlist/PlaylistEditModal";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useIsMobile } from "@/hooks/use-mobile";
-import MAudioLogo from "@/assets/maudio-logo.svg";
+import { shareContent } from "@shared/lib/share";
+import { PlaylistManager } from "@web/components/playlist/PlaylistManager";
+import { PlaylistFollowButton } from "@web/components/playlist/PlaylistFollowButton";
+import { SavePlaylistButton } from "@web/components/playlist/SavePlaylistButton";
+import { PlaylistEditModal } from "@web/components/playlist/PlaylistEditModal";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { useIsMobile } from "@web/hooks/use-mobile";
+import MAudioLogo from "@web/assets/maudio-logo.svg";
 
 interface PlaylistDetails {
   id: string; title: string; description: string; cover_image_path: string;

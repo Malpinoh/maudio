@@ -5,15 +5,15 @@
  * for music data directly. They ask the repository, which owns query shape,
  * URL formatting (via StorageManager) and fallbacks.
  */
-import { supabase } from "@/integrations/supabase/client";
-import type { Track, TracksFilter } from "@/types/track-types";
-import type { StorageManager } from "@/core/storage/StorageManager";
+import { supabase } from "@shared/integrations/supabase/client";
+import type { Track, TracksFilter } from "@shared/types/track-types";
+import type { StorageManager } from "@shared/core/storage/StorageManager";
 import {
   fetchTracks as fetchTracksQuery,
   fetchTrack as fetchTrackQuery,
   fetchAvailableRegions,
   logStreamPlay,
-} from "@/services/track-service";
+} from "@shared/services/track-service";
 
 export interface AlbumSummary {
   album_name: string;

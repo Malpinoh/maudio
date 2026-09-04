@@ -1,22 +1,22 @@
 import { useState, useEffect } from "react";
-import MainLayout from "@/components/layout/MainLayout";
-import { TrackCard } from "@/components/ui/track-card";
-import { Section } from "@/components/sections/FeaturedSection";
+import MainLayout from "@web/components/layout/MainLayout";
+import { TrackCard } from "@web/components/ui/track-card";
+import { Section } from "@web/components/sections/FeaturedSection";
 import { 
   usePersonalizedRecommendations,
   useMoodRecommendations,
   useGenreRecommendations
-} from "@/hooks/use-recommendations";
-import { getAvailableGenres } from "@/utils/recommendationEngine";
-import { MoodSelector } from "@/components/upload/MoodSelector";
+} from "@web/hooks/use-recommendations";
+import { getAvailableGenres } from "@shared/utils/recommendationEngine";
+import { MoodSelector } from "@web/components/upload/MoodSelector";
 import { 
   Select, 
   SelectContent, 
   SelectItem, 
   SelectTrigger, 
   SelectValue 
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@web/components/ui/select";
+import { Skeleton } from "@web/components/ui/skeleton";
 
 const RecommendationsPage = () => {
   const [selectedMood, setSelectedMood] = useState("chill");

@@ -1,7 +1,7 @@
-import { Track } from "@/types/track-types";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { Track } from "@shared/types/track-types";
+import { Card } from "@web/components/ui/card";
+import { Progress } from "@web/components/ui/progress";
+import { Badge } from "@web/components/ui/badge";
 
 interface Props {
   track: Track;

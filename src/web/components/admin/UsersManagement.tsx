@@ -8,9 +8,9 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from "@web/components/ui/table";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -18,11 +18,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+} from "@web/components/ui/dialog";
+import { Badge } from "@web/components/ui/badge";
 import { AlertTriangle, Check, Search, Shield, User, UserX, Loader2, Crown, HeadphonesIcon } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@web/components/ui/use-toast";
+import { supabase } from "@shared/integrations/supabase/client";
 
 type UserRole = 'user' | 'admin' | 'distributor' | 'artist' | 'editorial' | 'support';
 

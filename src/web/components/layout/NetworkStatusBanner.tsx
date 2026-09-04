@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { WifiOff, Wifi } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { onNetworkChange, isOnline } from "@/lib/offline/network";
+import { cn } from "@shared/lib/utils";
+import { onNetworkChange, isOnline } from "@mobile/offline/network";
 
 export function NetworkStatusBanner() {
   const [online, setOnline] = useState<boolean>(typeof navigator !== "undefined" ? navigator.onLine : true);

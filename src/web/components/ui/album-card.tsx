@@ -1,10 +1,10 @@
 import React from "react";
 import { Play, Calendar, Music } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { Button } from "@web/components/ui/button";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import { Link } from "react-router-dom";
-import { Track } from "@/types/track-types";
-import { formatDuration } from "@/utils/formatTime";
+import { Track } from "@shared/types/track-types";
+import { formatDuration } from "@shared/utils/formatTime";
 
 interface AlbumCardProps {
   albumName: string;

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { LineChart, BarChart, PieChart } from "@/components/charts";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@web/components/ui/card";
+import { LineChart, BarChart, PieChart } from "@web/components/charts";
 
 export const AnalyticsTab = () => {
   const [timeRange, setTimeRange] = useState<"week" | "month" | "year">("month");

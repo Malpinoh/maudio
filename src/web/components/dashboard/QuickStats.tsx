@@ -7,9 +7,9 @@ import {
   Users,
   Loader2 
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@web/components/ui/card";
+import { useAuth } from "@web/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
 
 interface StatsData {
   tracks: number;

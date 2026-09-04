@@ -6,8 +6,8 @@ import MusicPlayer from "./MusicPlayer";
 import MobileMiniPlayer from "./MobileMiniPlayer";
 import MobileBottomNav from "./MobileBottomNav";
 import { NetworkStatusBanner } from "./NetworkStatusBanner";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { useIsMobile } from "@web/hooks/use-mobile";
+import { useMusicPlayer } from "@web/contexts/music-player";
 
 interface MainLayoutProps {
   children: ReactNode;

@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@web/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@web/components/ui/card';
+import { Alert, AlertDescription } from '@web/components/ui/alert';
 import { CheckCircle, XCircle, Loader2, Database } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@shared/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export function StorageSetup() {

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useRoyaltyData } from "@/hooks/use-royalty-data";
-import { useToast } from "@/components/ui/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@web/components/ui/dialog";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Label } from "@web/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@web/components/ui/select";
+import { Textarea } from "@web/components/ui/textarea";
+import { useRoyaltyData } from "@web/hooks/use-royalty-data";
+import { useToast } from "@web/components/ui/use-toast";
 
 interface PayoutRequestModalProps {
   isOpen: boolean;

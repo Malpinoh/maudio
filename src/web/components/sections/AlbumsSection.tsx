@@ -1,9 +1,9 @@
 import React from "react";
 import { Section } from "./FeaturedSection";
-import { AlbumCard } from "@/components/ui/album-card";
-import { useTracks } from "@/hooks/use-tracks";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { AlbumCard } from "@web/components/ui/album-card";
+import { useTracks } from "@web/hooks/use-tracks";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { useIsMobile } from "@web/hooks/use-mobile";
 import { Link } from "react-router-dom";
 import { Calendar, Music } from "lucide-react";
 

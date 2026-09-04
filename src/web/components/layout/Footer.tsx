@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import maudioLogo from "@/assets/maudio-logo.png";
+import maudioLogo from "@web/assets/maudio-logo.png";
 
 const Footer = () => {
   return (

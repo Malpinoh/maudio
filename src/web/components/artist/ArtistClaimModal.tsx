@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@web/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@web/components/ui/dialog";
+import { Textarea } from "@web/components/ui/textarea";
+import { Label } from "@web/components/ui/label";
+import { supabase } from "@shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { Upload } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@web/contexts/AuthContext";
 
 interface ArtistClaimModalProps {
   artistProfileId: string;

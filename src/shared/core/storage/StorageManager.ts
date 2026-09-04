@@ -29,7 +29,7 @@ import {
   offlineToTrack,
   type OfflineTrack,
   type TrackForOffline,
-} from "@/lib/offline/storage";
+} from "@mobile/offline/storage";
 
 export type MediaKind = "audio" | "cover" | "artist";
 

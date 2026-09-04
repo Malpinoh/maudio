@@ -6,15 +6,15 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+} from "@web/components/ui/table";
+import { Button } from "@web/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@web/components/ui/card";
+import { Badge } from "@web/components/ui/badge";
 import { Link } from "react-router-dom";
 import { ArrowRight, Download, Edit, Loader2, Play, Plus } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@web/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useIsMobile } from "@web/hooks/use-mobile";
 
 interface Track {
   id: string;

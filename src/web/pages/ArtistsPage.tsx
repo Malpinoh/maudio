@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArtistCard } from "@/components/ui/artist-card";
-import { Skeleton } from "@/components/ui/skeleton";
+import MainLayout from "@web/components/layout/MainLayout";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@web/components/ui/select";
+import { ArtistCard } from "@web/components/ui/artist-card";
+import { Skeleton } from "@web/components/ui/skeleton";
 import { Search } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@shared/integrations/supabase/client";
 
 interface Artist {
   id: string;

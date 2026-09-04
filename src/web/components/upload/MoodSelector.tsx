@@ -5,7 +5,7 @@ import {
   SelectItem, 
   SelectTrigger, 
   SelectValue 
-} from "@/components/ui/select";
+} from "@web/components/ui/select";
 
 interface MoodSelectorProps {
   value: string;

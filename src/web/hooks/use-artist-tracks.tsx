@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@shared/integrations/supabase/client";
 import { toast } from "sonner";
-import type { Track } from "@/types/track-types";
-import { useMusicRepository, useStorageManager } from "@/core";
+import type { Track } from "@shared/types/track-types";
+import { useMusicRepository, useStorageManager } from "@shared/core";
 
 /**
  * Artist tracks are fetched via MusicRepository; the realtime subscription only

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Play, Music, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import MAudioLogo from "@/assets/maudio-logo.svg";
+import { Button } from "@web/components/ui/button";
+import MAudioLogo from "@web/assets/maudio-logo.svg";
 
 interface PlaylistCardProps {
   id: string;

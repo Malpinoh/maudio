@@ -1,9 +1,9 @@
 
 import { useCallback } from "react";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { EqBand, EQ_PRESETS } from "@/hooks/use-audio-engine";
-import { cn } from "@/lib/utils";
+import { Switch } from "@web/components/ui/switch";
+import { Button } from "@web/components/ui/button";
+import { EqBand, EQ_PRESETS } from "@web/hooks/use-audio-engine";
+import { cn } from "@shared/lib/utils";
 
 interface AudioEqualizerProps {
   bands: EqBand[];

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import { Play, Pause, SkipForward, RotateCcw, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@shared/lib/utils";
 import { MobileFullscreenPlayer } from "./MobileFullscreenPlayer";
-import { hapticLight } from "@/lib/native";
+import { hapticLight } from "@mobile/native";
 
 /**
  * Apple-Music–style floating mini player.

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, Upload, User, LogOut, BarChart3, Settings } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { SearchBar } from "@/components/layout/SearchBar";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { Button } from "@/components/ui/button";
+import { useAuth } from "@web/contexts/AuthContext";
+import { SearchBar } from "@web/components/layout/SearchBar";
+import { ThemeToggle } from "@web/components/ThemeToggle";
+import { Button } from "@web/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@web/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,9 +17,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import maudioLogo from "@/assets/maudio-logo.png";
+} from "@web/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@web/components/ui/avatar";
+import maudioLogo from "@web/assets/maudio-logo.png";
 
 const navLinks = [
   { to: "/", label: "Home" },

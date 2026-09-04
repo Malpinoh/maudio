@@ -2,23 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@web/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@web/components/ui/form";
+import { Input } from "@web/components/ui/input";
+import { Textarea } from "@web/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@web/components/ui/select";
+import { Switch } from "@web/components/ui/switch";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@web/components/ui/card";
+import { Badge } from "@web/components/ui/badge";
+import { Alert, AlertDescription } from "@web/components/ui/alert";
 import { FileUploader } from "./FileUploader";
 import { TagInput } from "./TagInput";
 import { MoodSelector } from "./MoodSelector";
 import { toast } from "sonner";
 import { Loader2, Upload, Music, Album, Disc3, CheckCircle, XCircle, AlertCircle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { getAudioDuration, isValidAudioFile } from "@/utils/audioUtils";
-import { formatTime } from "@/utils/formatTime";
+import { supabase } from "@shared/integrations/supabase/client";
+import { getAudioDuration, isValidAudioFile } from "@shared/utils/audioUtils";
+import { formatTime } from "@shared/utils/formatTime";
 
 const trackTypes = [
   { value: "single", label: "Single Track", icon: Music },

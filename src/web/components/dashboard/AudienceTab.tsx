@@ -1,6 +1,6 @@
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { LineChart, PieChart } from "@/components/charts";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@web/components/ui/card";
+import { LineChart, PieChart } from "@web/components/charts";
 
 export const AudienceTab = () => {
   return (

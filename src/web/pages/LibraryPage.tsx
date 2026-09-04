@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from "@/contexts/AuthContext";
-import MainLayout from "@/components/layout/MainLayout";
+import { useAuth } from "@web/contexts/AuthContext";
+import MainLayout from "@web/components/layout/MainLayout";
 import { useNavigate } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@web/components/ui/tabs";
 import { Heart, Save, BarChart3, Clock, Download, WifiOff, Play, Trash2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { TrackCard } from "@/components/ui/track-card";
-import { Track } from "@/types/track-types";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { listDownloads, listOfflineMix, deleteDownload, offlineToTrack, getCacheUsage, clearCache, OfflineTrack } from "@/lib/offline/storage";
-import { Button } from "@/components/ui/button";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { supabase } from "@shared/integrations/supabase/client";
+import { TrackCard } from "@web/components/ui/track-card";
+import { Track } from "@shared/types/track-types";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { useIsMobile } from "@web/hooks/use-mobile";
+import { listDownloads, listOfflineMix, deleteDownload, offlineToTrack, getCacheUsage, clearCache, OfflineTrack } from "@mobile/offline/storage";
+import { Button } from "@web/components/ui/button";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import { toast } from "sonner";
-import { hapticLight } from "@/lib/native";
+import { hapticLight } from "@mobile/native";
 
 const LibraryPage = () => {
   const { user } = useAuth();

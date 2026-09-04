@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronRight, Play } from "lucide-react";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { Track } from "@/types/track-types";
-import { formatDuration } from "@/utils/formatTime";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { Track } from "@shared/types/track-types";
+import { formatDuration } from "@shared/utils/formatTime";
 
 interface CollapsibleAlbumProps {
   album: {

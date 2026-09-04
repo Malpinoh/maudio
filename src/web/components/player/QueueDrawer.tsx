@@ -1,7 +1,7 @@
-import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { Sheet, SheetContent } from "@web/components/ui/sheet";
+import { ScrollArea } from "@web/components/ui/scroll-area";
+import { Button } from "@web/components/ui/button";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import { ChevronUp, ChevronDown, Play, Pause, X } from "lucide-react";
 
 interface Props {

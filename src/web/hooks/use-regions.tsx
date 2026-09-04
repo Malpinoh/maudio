@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { fetchAvailableRegions } from '@/services/track-service';
+import { fetchAvailableRegions } from '@shared/services/track-service';
 
 export function useAvailableRegions() {
   const [regions, setRegions] = useState<string[]>([]);

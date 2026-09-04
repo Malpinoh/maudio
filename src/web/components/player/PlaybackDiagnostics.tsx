@@ -1,6 +1,6 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { PlaybackError } from "@/contexts/music-player/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@web/components/ui/dialog";
+import { Button } from "@web/components/ui/button";
+import { PlaybackError } from "@web/contexts/music-player/types";
 import { Copy, Bug } from "lucide-react";
 import { toast } from "sonner";
 

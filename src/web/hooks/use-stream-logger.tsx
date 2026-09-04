@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useAuth } from "@web/contexts/AuthContext";
 
 export function useStreamLogger() {
   const { user } = useAuth();

@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-import MainLayout from "@/components/layout/MainLayout";
-import { TrackCard } from "@/components/ui/track-card";
-import { useTracks } from "@/hooks/use-tracks";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
+import MainLayout from "@web/components/layout/MainLayout";
+import { TrackCard } from "@web/components/ui/track-card";
+import { useTracks } from "@web/hooks/use-tracks";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { Button } from "@web/components/ui/button";
 import { Play, Music } from "lucide-react";
-import { useMusicPlayer } from "@/contexts/MusicPlayerContext";
+import { useMusicPlayer } from "@web/contexts/MusicPlayerContext";
 
 // Genre metadata
 const genreInfo = {

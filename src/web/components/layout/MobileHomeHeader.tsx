@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
+import { Avatar, AvatarImage, AvatarFallback } from "@web/components/ui/avatar";
+import { useAuth } from "@web/contexts/AuthContext";
+import { cn } from "@shared/lib/utils";
 
 export type HomeFilter = "all" | "music" | "genres" | "playlists";
 

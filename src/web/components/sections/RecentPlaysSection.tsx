@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
-import { Track } from "@/types/track-types";
-import { TrackCard } from "@/components/ui/track-card";
+import { useAuth } from "@web/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
+import { Track } from "@shared/types/track-types";
+import { TrackCard } from "@web/components/ui/track-card";
 import { TrendingUp } from "lucide-react";
 
 export function RecentPlaysSection() {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@web/components/ui/button";
 import { Bookmark, BookmarkCheck } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useAuth } from "@web/contexts/AuthContext";
 import { toast } from "sonner";
 
 interface SavePlaylistButtonProps {

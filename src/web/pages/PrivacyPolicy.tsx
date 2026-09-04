@@ -1,6 +1,6 @@
 
-import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
+import MainLayout from "@web/components/layout/MainLayout";
+import { Button } from "@web/components/ui/button";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 

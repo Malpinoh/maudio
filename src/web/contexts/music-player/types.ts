@@ -1,6 +1,6 @@
 
-import { Track } from "@/types/track-types";
-import { EqBand, EngineStatus } from "@/hooks/use-audio-engine";
+import { Track } from "@shared/types/track-types";
+import { EqBand, EngineStatus } from "@web/hooks/use-audio-engine";
 
 export type RepeatMode = 'off' | 'all' | 'one';
 

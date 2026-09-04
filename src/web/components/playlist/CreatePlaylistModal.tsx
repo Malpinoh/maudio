@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Label } from "@web/components/ui/label";
+import { Textarea } from "@web/components/ui/textarea";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useAuth } from "@web/contexts/AuthContext";
 import { toast } from "sonner";
 import { X, Upload } from "lucide-react";
 import {
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@web/components/ui/dialog";
 
 interface CreatePlaylistModalProps {
   onPlaylistCreated: () => void;

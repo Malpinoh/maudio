@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LogIn, AtSign, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
-import MainLayout from "@/components/layout/MainLayout";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Label } from "@web/components/ui/label";
+import { Separator } from "@web/components/ui/separator";
+import { Checkbox } from "@web/components/ui/checkbox";
+import MainLayout from "@web/components/layout/MainLayout";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@shared/integrations/supabase/client";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

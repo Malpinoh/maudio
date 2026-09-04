@@ -15,8 +15,8 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { cn } from "@/lib/utils";
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { cn } from "@shared/lib/utils";
+import { ChartContainer, ChartTooltipContent } from "@web/components/ui/chart";
 
 // Color palette for charts
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"];

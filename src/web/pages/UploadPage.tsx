@@ -1,12 +1,12 @@
 
 import React, { useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@web/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
-import { UploadForm } from "@/components/upload/UploadForm";
-import { AudioDebugPanel } from "@/components/debug/AudioDebugPanel";
-import { StorageSetup } from "@/components/admin/StorageSetup";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import MainLayout from "@web/components/layout/MainLayout";
+import { UploadForm } from "@web/components/upload/UploadForm";
+import { AudioDebugPanel } from "@web/components/debug/AudioDebugPanel";
+import { StorageSetup } from "@web/components/admin/StorageSetup";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@web/components/ui/card";
 import { toast } from "sonner";
 
 export default function UploadPage() {

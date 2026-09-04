@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { Track } from "@/types/track-types";
-import { fetchTrack } from "@/services/track-service";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { Track } from "@shared/types/track-types";
+import { fetchTrack } from "@shared/services/track-service";
 import { toast } from "sonner";
 import { Play } from "lucide-react";
 

@@ -1,16 +1,16 @@
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@web/contexts/AuthContext";
 import { Navigate } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { QuickStats } from "@/components/dashboard/QuickStats";
-import { DashboardTabs } from "@/components/dashboard/DashboardTabs";
-import { InsightsSection } from "@/components/dashboard/InsightsSection";
-import { PromotionSection } from "@/components/dashboard/PromotionSection";
-import { ArtistProfileEditor } from "@/components/artist/ArtistProfileEditor";
-import { EarningsDashboard } from "@/components/royalty/EarningsDashboard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import MainLayout from "@web/components/layout/MainLayout";
+import { DashboardHeader } from "@web/components/dashboard/DashboardHeader";
+import { QuickStats } from "@web/components/dashboard/QuickStats";
+import { DashboardTabs } from "@web/components/dashboard/DashboardTabs";
+import { InsightsSection } from "@web/components/dashboard/InsightsSection";
+import { PromotionSection } from "@web/components/dashboard/PromotionSection";
+import { ArtistProfileEditor } from "@web/components/artist/ArtistProfileEditor";
+import { EarningsDashboard } from "@web/components/royalty/EarningsDashboard";
+import { Card, CardContent, CardHeader, CardTitle } from "@web/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@web/components/ui/tabs";
 import { DollarSign, BarChart3 } from "lucide-react";
 
 export default function ArtistDashboard() {

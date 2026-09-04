@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { ArtistCard } from "@/components/ui/artist-card";
-import { PlaylistCard } from "@/components/ui/playlist-card";
-import { TrackCard } from "@/components/ui/track-card";
-import { Section } from "@/components/sections/FeaturedSection";
-import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/integrations/supabase/client";
-import { usePersonalizedRecommendations } from "@/hooks/use-recommendations";
-import { useAuth } from "@/contexts/AuthContext";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { ArtistCard } from "@web/components/ui/artist-card";
+import { PlaylistCard } from "@web/components/ui/playlist-card";
+import { TrackCard } from "@web/components/ui/track-card";
+import { Section } from "@web/components/sections/FeaturedSection";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { supabase } from "@shared/integrations/supabase/client";
+import { usePersonalizedRecommendations } from "@web/hooks/use-recommendations";
+import { useAuth } from "@web/contexts/AuthContext";
+import { useIsMobile } from "@web/hooks/use-mobile";
 import { Link } from "react-router-dom";
 import { BadgeCheck } from "lucide-react";
 

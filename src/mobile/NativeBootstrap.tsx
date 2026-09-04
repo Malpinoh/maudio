@@ -5,8 +5,8 @@ import {
   requestNotificationPermission,
   setHomeShortcuts,
   onAppStateChange,
-} from "@/lib/native";
-import { useMusicPlayer } from "@/contexts/music-player";
+} from "@mobile/native";
+import { useMusicPlayer } from "@web/contexts/music-player";
 
 /**
  * Mounts once at the App root. Owns all native-only side effects:

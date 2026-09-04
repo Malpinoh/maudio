@@ -1,9 +1,9 @@
 
-import MainLayout from "@/components/layout/MainLayout";
-import ReportForm from "@/components/report/ReportForm";
-import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import MainLayout from "@web/components/layout/MainLayout";
+import ReportForm from "@web/components/report/ReportForm";
+import { useAuth } from "@web/contexts/AuthContext";
+import { Button } from "@web/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from "@web/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 

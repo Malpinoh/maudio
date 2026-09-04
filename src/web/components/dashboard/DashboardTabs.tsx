@@ -1,5 +1,5 @@
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@web/components/ui/tabs";
 import { BarChart3, Music, Globe } from "lucide-react";
 import { AnalyticsTab } from "./AnalyticsTab";
 import { TracksTab } from "./TracksTab";

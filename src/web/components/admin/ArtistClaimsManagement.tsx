@@ -8,9 +8,9 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from "@web/components/ui/table";
+import { Button } from "@web/components/ui/button";
+import { Badge } from "@web/components/ui/badge";
 import { 
   Dialog,
   DialogContent,
@@ -18,12 +18,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+} from "@web/components/ui/dialog";
+import { Textarea } from "@web/components/ui/textarea";
+import { Label } from "@web/components/ui/label";
 import { Check, X, Eye, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@shared/integrations/supabase/client";
 
 interface ArtistClaim {
   id: string;

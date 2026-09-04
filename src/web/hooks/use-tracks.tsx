@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { toast } from "sonner";
-import type { Track, TracksFilter } from '@/types/track-types';
-import { useMusicRepository } from '@/core';
+import type { Track, TracksFilter } from '@shared/types/track-types';
+import { useMusicRepository } from '@shared/core';
 
 // Fix: Use 'export type' for re-exporting types with isolatedModules enabled
-export type { Track, TracksFilter } from '@/types/track-types';
-export { logStreamPlay } from '@/services/track-service';
+export type { Track, TracksFilter } from '@shared/types/track-types';
+export { logStreamPlay } from '@shared/services/track-service';
 
 /** Reads music data exclusively through MusicRepository. */
 export function useTracks(filter: TracksFilter = { published: true, limit: 10 }) {

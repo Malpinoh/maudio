@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@web/components/ui/button";
+import { supabase } from "@shared/integrations/supabase/client";
+import { useAuth } from "@web/contexts/AuthContext";
 import { toast } from "sonner";
 import { GripVertical, Trash2, Plus } from "lucide-react";
-import { Track } from "@/types/track-types";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { Track } from "@shared/types/track-types";
+import { useMusicPlayer } from "@web/contexts/music-player";
 
 interface PlaylistTrack {
   id: string;

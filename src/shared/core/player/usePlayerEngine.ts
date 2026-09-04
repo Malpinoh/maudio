@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import { createPlayerEngine, type PlayerEngine } from "./PlayerEngine";
 
 /** Consume playback state/actions through the centralized PlayerEngine. */

@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@web/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,11 +8,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+} from "@web/components/ui/card";
+import { Input } from "@web/components/ui/input";
+import { Label } from "@web/components/ui/label";
+import { useToast } from "@web/components/ui/use-toast";
+import { supabase } from "@shared/integrations/supabase/client";
 
 export function AdminAuth({ onAuth }: { onAuth: (success: boolean) => void }) {
   const [email, setEmail] = useState("");

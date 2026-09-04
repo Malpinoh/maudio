@@ -1,8 +1,8 @@
 
 import React from "react";
-import MainLayout from "@/components/layout/MainLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import MainLayout from "@web/components/layout/MainLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@web/components/ui/card";
+import { Badge } from "@web/components/ui/badge";
 import { Calendar, Users, Music, TrendingUp, Shield, Clock } from "lucide-react";
 
 const ServiceInfoPage = () => {

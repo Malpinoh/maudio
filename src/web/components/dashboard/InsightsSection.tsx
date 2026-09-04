@@ -1,5 +1,5 @@
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@web/components/ui/card";
 import { FileBarChart, TrendingUp, Users, BookMarked } from "lucide-react";
 
 export const InsightsSection = () => {

@@ -1,13 +1,13 @@
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ProfilePictureUploader } from "@/components/profile/ProfilePictureUploader";
-import { VerificationBadgeRequest } from "@/components/profile/VerificationBadgeRequest";
-import { useArtistProfile } from "@/hooks/use-artist-profile";
-import { useAuth } from "@/contexts/AuthContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@web/components/ui/card";
+import { Button } from "@web/components/ui/button";
+import { Input } from "@web/components/ui/input";
+import { Textarea } from "@web/components/ui/textarea";
+import { ProfilePictureUploader } from "@web/components/profile/ProfilePictureUploader";
+import { VerificationBadgeRequest } from "@web/components/profile/VerificationBadgeRequest";
+import { useArtistProfile } from "@web/hooks/use-artist-profile";
+import { useAuth } from "@web/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
 
 export function ArtistProfileEditor() {

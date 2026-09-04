@@ -1,6 +1,6 @@
-import { Track } from "@/types/track-types";
-import { Card } from "@/components/ui/card";
-import { formatTime } from "@/utils/formatTime";
+import { Track } from "@shared/types/track-types";
+import { Card } from "@web/components/ui/card";
+import { formatTime } from "@shared/utils/formatTime";
 
 interface Props {
   track: Track;

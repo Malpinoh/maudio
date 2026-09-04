@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
-import { supabase } from "@/integrations/supabase/client";
-import { formatTracks } from "@/services/track-service";
-import { Track } from "@/types/track-types";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { Button } from "@/components/ui/button";
+import MainLayout from "@web/components/layout/MainLayout";
+import { supabase } from "@shared/integrations/supabase/client";
+import { formatTracks } from "@shared/services/track-service";
+import { Track } from "@shared/types/track-types";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { Button } from "@web/components/ui/button";
 import { Play, Heart, MoreHorizontal, Calendar } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { formatTime } from "@/utils/formatTime";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { formatTime } from "@shared/utils/formatTime";
 
 interface Album {
   name: string;

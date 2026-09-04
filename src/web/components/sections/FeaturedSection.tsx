@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { TrackCard } from "@/components/ui/track-card";
+import { Button } from "@web/components/ui/button";
+import { TrackCard } from "@web/components/ui/track-card";
 import { Link } from "react-router-dom";
-import { useTracks } from "@/hooks/use-tracks";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useTracks } from "@web/hooks/use-tracks";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { useIsMobile } from "@web/hooks/use-mobile";
 
 interface SectionProps {
   title: string;

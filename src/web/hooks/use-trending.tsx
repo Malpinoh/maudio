@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@shared/integrations/supabase/client";
 import { toast } from "sonner";
-import type { Track } from '@/types/track-types';
-import { useMusicRepository } from '@/core';
+import type { Track } from '@shared/types/track-types';
+import { useMusicRepository } from '@shared/core';
 
 export function useTrending(limit = 50) {
   const repository = useMusicRepository();

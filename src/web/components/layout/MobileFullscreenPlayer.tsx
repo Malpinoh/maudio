@@ -1,23 +1,23 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { useMusicPlayer } from "@/contexts/music-player";
+import { useMusicPlayer } from "@web/contexts/music-player";
 import {
   Play, Pause, SkipBack, SkipForward, Volume2, VolumeX,
   Repeat, Repeat1, Shuffle, Heart, ChevronDown, ListMusic,
   AlertCircle, RotateCcw, Settings2, Plus, Share2, Bookmark,
 } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
+import { Slider } from "@web/components/ui/slider";
+import { Button } from "@web/components/ui/button";
 import { Link } from "react-router-dom";
-import { formatTime } from "@/utils/formatTime";
-import { cn } from "@/lib/utils";
-import { PlaybackDiagnostics } from "@/components/player/PlaybackDiagnostics";
-import { TrackMetadataCard } from "@/components/player/TrackMetadataCard";
-import { SongDnaCard } from "@/components/player/SongDnaCard";
-import { RelatedTracksSection } from "@/components/player/RelatedTracksSection";
-import { QueueDrawer } from "@/components/player/QueueDrawer";
-import { PlaybackSettingsDrawer } from "@/components/player/PlaybackSettingsDrawer";
+import { formatTime } from "@shared/utils/formatTime";
+import { cn } from "@shared/lib/utils";
+import { PlaybackDiagnostics } from "@web/components/player/PlaybackDiagnostics";
+import { TrackMetadataCard } from "@web/components/player/TrackMetadataCard";
+import { SongDnaCard } from "@web/components/player/SongDnaCard";
+import { RelatedTracksSection } from "@web/components/player/RelatedTracksSection";
+import { QueueDrawer } from "@web/components/player/QueueDrawer";
+import { PlaybackSettingsDrawer } from "@web/components/player/PlaybackSettingsDrawer";
 import { toast } from "sonner";
-import { DownloadButton } from "@/components/offline/DownloadButton";
+import { DownloadButton } from "@web/components/offline/DownloadButton";
 
 interface Props {
   isOpen: boolean;

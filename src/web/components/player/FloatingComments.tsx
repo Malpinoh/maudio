@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
-import { TrackComment } from '@/hooks/use-track-comments';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { TrackComment } from '@web/hooks/use-track-comments';
+import { Avatar, AvatarFallback, AvatarImage } from "@web/components/ui/avatar";
 import { Shield } from 'lucide-react';
 
 interface FloatingCommentsProps {

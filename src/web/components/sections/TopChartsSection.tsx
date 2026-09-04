@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ChartPlaylistCard } from "@/components/ui/chart-playlist-card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@web/components/ui/button";
+import { ChartPlaylistCard } from "@web/components/ui/chart-playlist-card";
+import { Skeleton } from "@web/components/ui/skeleton";
 import { TrendingUp, Globe, MapPin } from "lucide-react";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { useUserLocation } from "@/hooks/use-user-location";
-import { useTracks } from "@/hooks/use-tracks";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { useUserLocation } from "@web/hooks/use-user-location";
+import { useTracks } from "@web/hooks/use-tracks";
 
 type Period = "daily" | "weekly";
 

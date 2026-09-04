@@ -1,11 +1,11 @@
-import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { useAudioPreferences } from "@/hooks/use-audio-preferences";
+import { Sheet, SheetContent } from "@web/components/ui/sheet";
+import { ScrollArea } from "@web/components/ui/scroll-area";
+import { Slider } from "@web/components/ui/slider";
+import { Switch } from "@web/components/ui/switch";
+import { Button } from "@web/components/ui/button";
+import { Card } from "@web/components/ui/card";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { useAudioPreferences } from "@web/hooks/use-audio-preferences";
 
 interface Props {
   open: boolean;

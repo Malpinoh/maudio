@@ -1,17 +1,17 @@
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import MainLayout from "@/components/layout/MainLayout";
-import { useTrack } from "@/hooks/use-track";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { useTrackComments } from "@/hooks/use-track-comments";
-import { useSimilarTracks } from "@/hooks/use-recommendations";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { TrackCard } from "@/components/ui/track-card";
+import MainLayout from "@web/components/layout/MainLayout";
+import { useTrack } from "@web/hooks/use-track";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { useTrackComments } from "@web/hooks/use-track-comments";
+import { useSimilarTracks } from "@web/hooks/use-recommendations";
+import { Button } from "@web/components/ui/button";
+import { Skeleton } from "@web/components/ui/skeleton";
+import { TrackCard } from "@web/components/ui/track-card";
 import { Play, Pause, Heart, Share, Music, Bookmark, AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CommentsSection } from "@/components/player/CommentsSection";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Alert, AlertDescription } from "@web/components/ui/alert";
+import { CommentsSection } from "@web/components/player/CommentsSection";
+import { useIsMobile } from "@web/hooks/use-mobile";
 
 export default function TrackPage() {
   const { trackId } = useParams<{ trackId: string }>();

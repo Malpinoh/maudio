@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import MainLayout from "@/components/layout/MainLayout";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useTracks, TracksFilter } from "@/hooks/use-tracks";
-import { TrackCard } from "@/components/ui/track-card";
-import { GenreCard } from "@/components/ui/genre-card";
-import { Skeleton } from "@/components/ui/skeleton";
+import MainLayout from "@web/components/layout/MainLayout";
+import { Button } from "@web/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@web/components/ui/tabs";
+import { Input } from "@web/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@web/components/ui/select";
+import { useTracks, TracksFilter } from "@web/hooks/use-tracks";
+import { TrackCard } from "@web/components/ui/track-card";
+import { GenreCard } from "@web/components/ui/genre-card";
+import { Skeleton } from "@web/components/ui/skeleton";
 import { Search } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@web/hooks/use-mobile";
 
 const genres = [
   { id: "hip-hop", name: "Hip Hop", image: "https://picsum.photos/id/1025/300/300", color: "from-yellow-500 to-orange-600" },

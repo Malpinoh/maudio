@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Play, WifiOff, Download as DownloadIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { TrackCard } from "@/components/ui/track-card";
-import { listDownloads, listOfflineMix, offlineToTrack, OfflineTrack } from "@/lib/offline/storage";
-import { useMusicPlayer } from "@/contexts/music-player";
-import { Track } from "@/types/track-types";
-import { hapticLight } from "@/lib/native";
+import { Button } from "@web/components/ui/button";
+import { TrackCard } from "@web/components/ui/track-card";
+import { listDownloads, listOfflineMix, offlineToTrack, OfflineTrack } from "@mobile/offline/storage";
+import { useMusicPlayer } from "@web/contexts/music-player";
+import { Track } from "@shared/types/track-types";
+import { hapticLight } from "@mobile/native";
 
 /**
  * Home screen content shown when the device is offline.

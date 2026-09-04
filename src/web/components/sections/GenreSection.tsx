@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { GenreCard } from "@/components/ui/genre-card";
-import { supabase } from "@/integrations/supabase/client";
-import { Skeleton } from "@/components/ui/skeleton";
+import { GenreCard } from "@web/components/ui/genre-card";
+import { supabase } from "@shared/integrations/supabase/client";
+import { Skeleton } from "@web/components/ui/skeleton";
 
 interface GenreData {
   id: string;
