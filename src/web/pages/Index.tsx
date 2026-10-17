@@ -43,9 +43,10 @@ const Index = () => {
             <OfflineHomeSection />
           ) : (
           <>
-          {/* Hero only on All */}
-          {show("all") && <HeroSection />}
-          {show("all") && <MusicPreferencesCard />}
+          {/* Mobile starts with listening activity and recommendations, like a music app.
+              Promotional banners and preference setup remain available on desktop. */}
+          {!isMobile && show("all") && <HeroSection />}
+          {!isMobile && show("all") && <MusicPreferencesCard />}
 
           {show("music") && <RecentPlaysSection />}
           {show("music") && <PersonalizedRecommendations />}
