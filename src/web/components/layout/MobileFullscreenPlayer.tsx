@@ -79,13 +79,38 @@ export const MobileFullscreenPlayer = ({ isOpen, onClose }: Props) => {
     dragMode.current = null;
   };
 
-  const handleLikeToggle = () => {
+  const handleLikeToggle = async () => {
     if (!currentTrack) return;
-    isTrackLiked(currentTrack.id) ? unlikeTrack(currentTrack.id) : likeTrack(currentTrack.id);
+    const wasLiked = isTrackLiked(currentTrack.id);
+    const success = wasLiked
+      ? await unlikeTrack(currentTrack.id)
+      : await likeTrack(currentTrack.id);
+
+    if (!success) {
+      toast.error("Sign in and try again to update your Liked Songs.");
+      return;
+    }
+
+    toast.success(wasLiked ? "Removed from Liked Songs" : "Added to Liked Songs", {
+      duration: 1800,
+    });
   };
-  const handleSaveToggle = () => {
+
+  const handleSaveToggle = async () => {
     if (!currentTrack) return;
-    isTrackSaved(currentTrack.id) ? unsaveTrack(currentTrack.id) : saveTrack(currentTrack.id);
+    const wasSaved = isTrackSaved(currentTrack.id);
+    const success = wasSaved
+      ? await unsaveTrack(currentTrack.id)
+      : await saveTrack(currentTrack.id);
+
+    if (!success) {
+      toast.error("Sign in and try again to update your saved tracks.");
+      return;
+    }
+
+    toast.success(wasSaved ? "Removed from Saved Tracks" : "Added to Saved Tracks", {
+      duration: 1800,
+    });
   };
   const handleShare = async () => {
     if (!currentTrack) return;
