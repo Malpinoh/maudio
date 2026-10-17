@@ -45,11 +45,18 @@ export function TrackCard({ track, showArtist = true, hidePlay = false, variant 
     e.preventDefault();
     e.stopPropagation();
     
-    if (liked) {
-      await unlikeTrack(track.id);
-    } else {
-      await likeTrack(track.id);
+    const success = liked
+      ? await unlikeTrack(track.id)
+      : await likeTrack(track.id);
+
+    if (!success) {
+      toast.error("Sign in and try again to update your Liked Songs.");
+      return;
     }
+
+    toast.success(liked ? "Removed from Liked Songs" : "Added to Liked Songs", {
+      duration: 1800,
+    });
   };
   
   const handleAddToQueue = (e: React.MouseEvent<HTMLButtonElement>) => {
