@@ -50,7 +50,7 @@ export function TrackCard({ track, showArtist = true, hidePlay = false, variant 
       : await likeTrack(track.id);
 
     if (!success) {
-      toast.error("Sign in and try again to update your Liked Songs.");
+      toast.error("Could not update Liked Songs. Check your sign-in and connection.");
       return;
     }
 
