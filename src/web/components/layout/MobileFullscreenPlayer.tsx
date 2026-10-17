@@ -87,7 +87,7 @@ export const MobileFullscreenPlayer = ({ isOpen, onClose }: Props) => {
       : await likeTrack(currentTrack.id);
 
     if (!success) {
-      toast.error("Sign in and try again to update your Liked Songs.");
+      toast.error("Could not update Liked Songs. Check your sign-in and connection.");
       return;
     }
 
@@ -104,7 +104,7 @@ export const MobileFullscreenPlayer = ({ isOpen, onClose }: Props) => {
       : await saveTrack(currentTrack.id);
 
     if (!success) {
-      toast.error("Sign in and try again to update your saved tracks.");
+      toast.error("Could not update saved tracks. Check your sign-in and connection.");
       return;
     }
 
