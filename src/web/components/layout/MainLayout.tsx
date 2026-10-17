@@ -40,14 +40,15 @@ const MainLayout = ({
     return () => window.removeEventListener('fullscreen-player-change', handler);
   }, []);
 
-  // Mobile: bottom nav (56px) + safe-inset + floating mini player (~62px + 8px gap)
+  // Mobile: reserve space for the docked mini-player and bottom navigation.
+  // The navigation itself accounts for the device safe-area inset.
   const hasMiniPlayer = isMobile && !hidePlayer && !!currentTrack;
   const showBottomNav = isMobile && !fullscreenOpen;
   const bottomSpacing = isMobile
     ? fullscreenOpen
       ? 'h-0'
       : hasMiniPlayer
-        ? 'h-[136px]' // 56 nav + 8 gap + 62 card + ~10 inset
+        ? 'h-[120px]' // 56 nav + approximately 64px docked mini-player
         : 'h-14'
     : hidePlayer ? 'h-0' : 'h-24';
 
