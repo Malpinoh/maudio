@@ -6,11 +6,10 @@ import { MobileFullscreenPlayer } from "./MobileFullscreenPlayer";
 import { hapticLight } from "@mobile";
 
 /**
- * Apple-Music–style floating mini player.
- *  - Floats above the bottom nav with a visible gap
- *  - Rounded card with strong shadow + backdrop blur
- *  - Circular progress ring is implicit via top progress hairline
- *  - Tap anywhere outside controls to expand the immersive full player
+ * Docked mobile mini player.
+ * It sits flush against the bottom navigation so playback feels like a
+ * persistent part of the app shell rather than a floating website widget.
+ * Tap the track area to expand the immersive full player.
  */
 const MobileMiniPlayer = () => {
   const {
@@ -48,10 +47,10 @@ const MobileMiniPlayer = () => {
     <>
       <div
         className={cn(
-          "fixed left-0 right-0 z-40 lg:hidden px-2 animate-slide-up",
+          "fixed left-0 right-0 z-40 lg:hidden animate-slide-up",
           "pointer-events-none"
         )}
-        style={{ bottom: "calc(56px + env(safe-area-inset-bottom, 0px) + 8px)" }}
+        style={{ bottom: "calc(56px + env(safe-area-inset-bottom, 0px))" }}
       >
         <div
           role="button"
@@ -63,10 +62,10 @@ const MobileMiniPlayer = () => {
           onTouchCancel={() => setPressed(false)}
           className={cn(
             "pointer-events-auto cursor-pointer select-none",
-            "rounded-2xl overflow-hidden",
-            "bg-card/85 backdrop-blur-xl backdrop-saturate-150",
-            "border border-border/60",
-            "shadow-[0_10px_30px_-12px_rgba(0,0,0,0.55)]",
+            "rounded-t-xl rounded-b-none overflow-hidden",
+            "bg-card/95 backdrop-blur-xl backdrop-saturate-150",
+            "border-x-0 border-t border-b-0 border-border/60",
+            "shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.55)]",
             "transition-transform duration-150",
             pressed && "scale-[0.985]"
           )}
@@ -82,7 +81,7 @@ const MobileMiniPlayer = () => {
             />
           </div>
 
-          <div className="flex items-center gap-3 px-2.5 py-2">
+          <div className="flex items-center gap-3 px-3 py-2">
             {/* Album art with subtle glow */}
             <div className="relative flex-shrink-0">
               <img
